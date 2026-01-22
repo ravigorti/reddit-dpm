@@ -70,7 +70,7 @@ export function ReaderView() {
         <div className="mb-6">
           <p className="mb-2 text-sm text-primary">{story.subreddit}</p>
           <h1 className="mb-4 font-reading text-2xl font-bold leading-tight">
-            {story.title}
+            {story.title.replace(' (Part 1)', '').replace(' - I never should have taken that night shift at the ranger station', '')}
           </h1>
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-orange-600" />
