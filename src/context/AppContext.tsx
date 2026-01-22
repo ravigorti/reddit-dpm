@@ -18,8 +18,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [currentStoryId, setCurrentStoryId] = useState<string | null>(null);
   const [savedStories, setSavedStories] = useState<SavedStory[]>([
     {
-      id: '1',
-      title: 'The Whistlers in the Woods (Part 1)',
+      id: 'whistlers-1',
+      title: 'The Whistlers in the Woods',
       subreddit: 'r/nosleep',
       author: 'u/forest_watcher',
       readProgress: 0,
