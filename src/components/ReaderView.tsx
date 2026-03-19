@@ -1,13 +1,30 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Share2, Bookmark, Settings } from 'lucide-react';
+import { ArrowLeft, Share2, Bookmark, Settings, Clock } from 'lucide-react';
 import { useReadingProgress } from '@/hooks/useReadingProgress';
 import { useApp } from '@/context/AppContext';
+import { AuthorAnalyticsSheet } from './AuthorAnalyticsSheet';
+import { SessionSummary } from './SessionSummary';
 
 export function ReaderView() {
   const progress = useReadingProgress();
-  const { savedStories, updateStoryProgress, setCurrentStoryId, currentStoryId } = useApp();
+  const { savedStories, updateStoryProgress, setCurrentStoryId, currentStoryId, setActiveTab } = useApp();
   const progressRef = useRef(progress);
+  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
+  const [sessionSeconds, setSessionSeconds] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setSessionSeconds((s) => s + 1), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (progress >= 95 && !showSummary) {
+      const t = setTimeout(() => setShowSummary(true), 1000); // 1s delay
+      return () => clearTimeout(t);
+    }
+  }, [progress, showSummary]);
 
   const story = savedStories.find((s) => s.id === currentStoryId);
 
@@ -18,6 +35,14 @@ export function ReaderView() {
 
   // Save progress on exit
   const handleBack = () => {
+    if (progress >= 95) {
+      setShowSummary(true);
+      return;
+    }
+    doExit();
+  };
+
+  const doExit = () => {
     if (currentStoryId) {
       updateStoryProgress(currentStoryId, progressRef.current);
     }
@@ -25,7 +50,28 @@ export function ReaderView() {
     window.scrollTo(0, 0);
   };
 
+  const handleTakeBreak = () => {
+    doExit();
+    setActiveTab('home');
+  };
+
+  const handleKeepReading = () => {
+    doExit();
+    setActiveTab('reads');
+  };
+
   if (!story) return null;
+
+  if (showSummary) {
+    return (
+      <SessionSummary
+        title={story.title}
+        timeSpentSeconds={sessionSeconds}
+        onTakeBreak={handleTakeBreak}
+        onKeepReading={handleKeepReading}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -51,6 +97,12 @@ export function ReaderView() {
           </button>
           
           <div className="flex items-center gap-1">
+            <div className="mr-2 flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600 dark:bg-muted dark:text-muted-foreground border border-slate-200 dark:border-border">
+              <Clock size={12} className={sessionSeconds > 0 ? 'animate-pulse text-orange-500' : ''} />
+              <span>
+                {Math.floor(sessionSeconds / 60)}:{(sessionSeconds % 60).toString().padStart(2, '0')}
+              </span>
+            </div>
             <button className="rounded-full p-2 transition-colors hover:bg-muted">
               <Settings size={20} className="text-muted-foreground" />
             </button>
@@ -75,7 +127,17 @@ export function ReaderView() {
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-orange-600" />
             <div>
-              <p className="font-medium">{story.author}</p>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setIsAnalyticsOpen(true)}
+                  className="font-medium text-left hover:underline"
+                >
+                  {story.author}
+                </button>
+                <div className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-semibold text-orange-700 dark:bg-orange-500/20 dark:text-orange-400">
+                  <span className="text-[8px]">⭐</span> Featured in Reads
+                </div>
+              </div>
               <p className="text-sm text-muted-foreground">{story.timeAgo} • {story.estimatedReadTime}</p>
             </div>
           </div>
@@ -178,6 +240,12 @@ export function ReaderView() {
         {/* Bottom spacing */}
         <div className="h-32" />
       </article>
+
+      <AuthorAnalyticsSheet
+        isOpen={isAnalyticsOpen}
+        onClose={() => setIsAnalyticsOpen(false)}
+        authorUsername={story.author}
+      />
     </div>
   );
 }

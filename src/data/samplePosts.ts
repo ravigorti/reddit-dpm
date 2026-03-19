@@ -72,6 +72,8 @@ export const samplePosts: Post[] = [
     upvotes: 15234,
     comments: 892,
     timeAgo: '5h',
+    readersCount: 12400,
+    featured: true,
   },
   {
     id: 'askreddit-1',
@@ -82,6 +84,8 @@ export const samplePosts: Post[] = [
     upvotes: 28400,
     comments: 4521,
     timeAgo: '8h',
+    readersCount: 8200,
+    featured: true,
   },
   {
     id: 'technology-1',
@@ -92,6 +96,8 @@ export const samplePosts: Post[] = [
     upvotes: 8932,
     comments: 1243,
     timeAgo: '3h',
+    readersCount: 5120,
+    featured: false,
   },
   {
     id: 'showerthoughts-1',
@@ -117,11 +123,11 @@ export const samplePosts: Post[] = [
 
 export const carouselData = {
   trendingNearYou: [
-    { id: 'trend-1', title: 'The Midnight Train', subreddit: 'r/nosleep', author: 'u/ghost_writer', emoji: '🚂' },
-    { id: 'trend-2', title: 'My Roommate Has Rules', subreddit: 'r/nosleep', author: 'u/scared_tenant', emoji: '🏠' },
-    { id: 'trend-3', title: 'The Stairs in the Woods', subreddit: 'r/nosleep', author: 'u/park_ranger', emoji: '🌲' },
-    { id: 'trend-4', title: 'I Found My Own Grave', subreddit: 'r/nosleep', author: 'u/lost_soul', emoji: '⚰️' },
-    { id: 'trend-5', title: 'The Radio Station', subreddit: 'r/nosleep', author: 'u/night_dj', emoji: '📻' },
+    { id: 'trend-1', title: 'The Midnight Train', subreddit: 'r/nosleep', author: 'u/ghost_writer', emoji: '🚂', readersCount: 15400, featured: true },
+    { id: 'trend-2', title: 'My Roommate Has Rules', subreddit: 'r/nosleep', author: 'u/scared_tenant', emoji: '🏠', readersCount: 9200, featured: false },
+    { id: 'trend-3', title: 'The Stairs in the Woods', subreddit: 'r/nosleep', author: 'u/forest_watcher', emoji: '🌲', readersCount: 12400, featured: true },
+    { id: 'trend-4', title: 'I Found My Own Grave', subreddit: 'r/nosleep', author: 'u/lost_soul', emoji: '⚰️', readersCount: 6500, featured: false },
+    { id: 'trend-5', title: 'The Radio Station', subreddit: 'r/nosleep', author: 'u/night_dj', emoji: '📻', readersCount: 11100, featured: true },
   ],
   popularGenres: [
     { id: 'genre-1', title: 'Horror', subreddit: 'r/nosleep', author: '', emoji: '👻' },
@@ -132,10 +138,10 @@ export const carouselData = {
     { id: 'genre-6', title: 'Fantasy', subreddit: 'r/Fantasy', author: '', emoji: '🐉' },
   ],
   topOnReddit: [
-    { id: 'top-1', title: 'The Borrasca Series', subreddit: 'r/nosleep', author: 'u/The_Dalek_Emperor', emoji: '⛰️' },
-    { id: 'top-2', title: 'My Dead Girlfriend', subreddit: 'r/nosleep', author: 'u/bloodstains', emoji: '💀' },
-    { id: 'top-3', title: 'The Left/Right Game', subreddit: 'r/nosleep', author: 'u/NeonTempo', emoji: '🎮' },
-    { id: 'top-4', title: 'Penpal', subreddit: 'r/nosleep', author: 'u/1000Vultures', emoji: '✉️' },
-    { id: 'top-5', title: 'The Patient That Nearly Drove Me Out', subreddit: 'r/nosleep', author: 'u/Dr_Creepen', emoji: '🏥' },
+    { id: 'top-1', title: 'The Borrasca Series', subreddit: 'r/nosleep', author: 'u/The_Dalek_Emperor', emoji: '⛰️', readersCount: 145000, featured: true },
+    { id: 'top-2', title: 'My Dead Girlfriend', subreddit: 'r/nosleep', author: 'u/bloodstains', emoji: '💀', readersCount: 89000, featured: true },
+    { id: 'top-3', title: 'The Left/Right Game', subreddit: 'r/nosleep', author: 'u/NeonTempo', emoji: '🎮', readersCount: 112000, featured: true },
+    { id: 'top-4', title: 'Penpal', subreddit: 'r/nosleep', author: 'u/1000Vultures', emoji: '✉️', readersCount: 250000, featured: true },
+    { id: 'top-5', title: 'The Patient That Nearly Drove Me Out', subreddit: 'r/nosleep', author: 'u/Dr_Creepen', emoji: '🏥', readersCount: 45000, featured: false },
   ],
 };

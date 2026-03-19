@@ -4,10 +4,21 @@ import { HomeFeed } from '@/components/HomeFeed';
 import { ReadsLibrary } from '@/components/ReadsLibrary';
 import { ReaderView } from '@/components/ReaderView';
 import { PlaceholderView } from '@/components/PlaceholderView';
+import { StoryPathPlayer } from '@/components/story-paths/StoryPathPlayer';
 import { AnimatePresence, motion } from 'framer-motion';
 
 function AppContent() {
-  const { activeTab, currentStoryId } = useApp();
+  const { activeTab, currentStoryId, activeStoryPathId, setActiveStoryPathId } = useApp();
+
+  // If viewing a story path, show story path player
+  if (activeStoryPathId) {
+    return (
+      <StoryPathPlayer
+        storyId={activeStoryPathId}
+        onExit={() => setActiveStoryPathId(null)}
+      />
+    );
+  }
 
   // If viewing a story, show reader
   if (currentStoryId) {

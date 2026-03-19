@@ -2,13 +2,18 @@ import { Search, User } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { JumpBackIn } from './JumpBackIn';
 import { HorizontalCarousel } from './HorizontalCarousel';
+import { StoryPathsCarousel } from './story-paths/StoryPathsCarousel';
 import { carouselData } from '@/data/samplePosts';
+import { ReadsIntroWalkthrough } from './ReadsIntroWalkthrough';
+import { DailyReadingGoal } from './DailyReadingGoal';
 
 export function ReadsLibrary() {
-  const { savedStories } = useApp();
+  const { savedStories, setActiveStoryPathId } = useApp();
 
   return (
     <div className="min-h-screen bg-background pb-20">
+      <ReadsIntroWalkthrough />
+      
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-border bg-card">
         <div className="flex items-center justify-between px-4 py-3">
@@ -40,8 +45,17 @@ export function ReadsLibrary() {
         </div>
       </header>
 
+      {/* Daily Reading Goal */}
+      <DailyReadingGoal />
+
       {/* Jump Back In Section */}
       <JumpBackIn stories={savedStories} />
+
+      {/* Separator */}
+      <div className="mx-4 border-t border-border" />
+
+      {/* Story Paths */}
+      <StoryPathsCarousel onStorySelect={(id) => setActiveStoryPathId(id)} />
 
       {/* Separator */}
       <div className="mx-4 border-t border-border" />

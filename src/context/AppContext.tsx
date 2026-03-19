@@ -9,6 +9,8 @@ interface AppContextType {
   updateStoryProgress: (storyId: string, progress: number) => void;
   currentStoryId: string | null;
   setCurrentStoryId: (id: string | null) => void;
+  activeStoryPathId: string | null;
+  setActiveStoryPathId: (id: string | null) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -16,6 +18,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: ReactNode }) {
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [currentStoryId, setCurrentStoryId] = useState<string | null>(null);
+  const [activeStoryPathId, setActiveStoryPathId] = useState<string | null>(null);
   const [savedStories, setSavedStories] = useState<SavedStory[]>([
     {
       id: 'whistlers-1',
@@ -54,6 +57,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         updateStoryProgress,
         currentStoryId,
         setCurrentStoryId,
+        activeStoryPathId,
+        setActiveStoryPathId,
       }}
     >
       {children}
