@@ -22,50 +22,8 @@ interface SceneViewProps {
 }
 
 /**
- * Render text with word-level narration highlighting.
- * The `fullText` is the concatenated text of all paragraphs (used for charIndex tracking).
- * `charOffset` is the starting char position of this paragraph within the full text.
+ * Apply bold formatting to matching terms.
  */
-function renderWithHighlight(
-  text: string,
-  boldTerms: string[],
-  charOffset: number,
-  currentCharIndex: number,
-  isNarrating: boolean
-): React.ReactNode {
-  if (!isNarrating || currentCharIndex < 0) {
-    return applyBoldTerms(text, boldTerms);
-  }
-
-  // Find the word being spoken relative to this paragraph
-  const relativeIndex = currentCharIndex - charOffset;
-
-  if (relativeIndex < 0 || relativeIndex >= text.length) {
-    // Highlight is not in this paragraph
-    return applyBoldTerms(text, boldTerms);
-  }
-
-  // Find word boundaries around relativeIndex
-  let wordStart = relativeIndex;
-  let wordEnd = relativeIndex;
-
-  while (wordStart > 0 && text[wordStart - 1] !== ' ') wordStart--;
-  while (wordEnd < text.length && text[wordEnd] !== ' ') wordEnd++;
-
-  const before = text.slice(0, wordStart);
-  const word = text.slice(wordStart, wordEnd);
-  const after = text.slice(wordEnd);
-
-  return (
-    <>
-      {before.length > 0 && applyBoldTerms(before, boldTerms)}
-      <mark className="narration-highlight rounded-sm bg-[#FF4500]/15 px-0.5 text-inherit">
-        {word}
-      </mark>
-      {after.length > 0 && applyBoldTerms(after, boldTerms)}
-    </>
-  );
-}
 
 function applyBoldTerms(text: string, terms: string[]): React.ReactNode[] {
   if (!terms.length) return [text];
@@ -109,16 +67,7 @@ export function SceneView({
     [sceneGlobalIndex, totalScenes]
   );
 
-  // Build full text and per-paragraph char offsets for highlight tracking
-  const { charOffsets } = useMemo(() => {
-    const offsets: number[] = [];
-    let cumulative = 0;
-    scene.paragraphs.forEach((para) => {
-      offsets.push(cumulative);
-      cumulative += para.text.length + 1; // +1 for the space/newline between paragraphs
-    });
-    return { charOffsets: offsets };
-  }, [scene]);
+
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-[#FDF6EC]">
@@ -224,13 +173,7 @@ export function SceneView({
                   : 'text-[#1A1A2E]/85'
               }`}
             >
-              {renderWithHighlight(
-                para.text,
-                scene.boldTerms,
-                charOffsets[i],
-                narrationState.currentCharIndex,
-                narrationState.isNarrating
-              )}
+              {applyBoldTerms(para.text, scene.boldTerms)}
             </p>
           ))}
         </div>
