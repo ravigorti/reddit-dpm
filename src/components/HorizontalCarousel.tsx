@@ -12,6 +12,8 @@ interface CarouselItem {
   emoji?: string;
   readProgress?: number;
   estimatedReadTime?: string;
+  readersCount?: number;
+  featured?: boolean;
 }
 
 interface HorizontalCarouselProps {
@@ -53,6 +55,7 @@ export function HorizontalCarousel({ title, items, showSeeAll = true }: Horizont
         {items.map((item, index) => (
           <motion.button
             key={item.id}
+            id={title === 'Trending Near You' && index === 0 ? 'tour-trending-first' : undefined}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05 }}
@@ -64,6 +67,15 @@ export function HorizontalCarousel({ title, items, showSeeAll = true }: Horizont
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-3xl">{item.emoji || '📖'}</span>
               </div>
+              
+              {/* Featured Badge */}
+              {item.featured && (
+                <div className="absolute top-1 right-1">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs shadow-md">
+                    ⭐
+                  </span>
+                </div>
+              )}
               
               {/* Subreddit tag */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2 pt-6">
@@ -83,6 +95,11 @@ export function HorizontalCarousel({ title, items, showSeeAll = true }: Horizont
             <p className="mt-2 w-28 text-left text-xs font-medium leading-tight line-clamp-2">
               {item.title}
             </p>
+            {item.readersCount && (
+              <p className="mt-1 w-28 text-left text-[10px] font-semibold text-[#00B894] flex items-center gap-0.5">
+                👁 {item.readersCount >= 1000 ? `${(item.readersCount / 1000).toFixed(1)}k` : item.readersCount}
+              </p>
+            )}
           </motion.button>
         ))}
       </div>

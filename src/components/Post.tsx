@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { ArrowBigUp, ArrowBigDown, MessageSquare, Share2, Bookmark, MoreHorizontal } from 'lucide-react';
+import { ArrowBigUp, ArrowBigDown, MessageSquare, Share2, Bookmark, MoreHorizontal, Eye, Info } from 'lucide-react';
 import { Post as PostType } from '@/types/reddit';
 import { SaveBottomSheet } from './SaveBottomSheet';
 import { useApp } from '@/context/AppContext';
+import { WhyThisStorySheet } from './WhyThisStorySheet';
 
 interface PostProps {
   post: PostType;
@@ -10,6 +11,7 @@ interface PostProps {
 
 export function Post({ post }: PostProps) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isWhyOpen, setIsWhyOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(post.isSaved || false);
   const [votes, setVotes] = useState(post.upvotes);
   const [voteState, setVoteState] = useState<'up' | 'down' | null>(null);
@@ -50,8 +52,21 @@ export function Post({ post }: PostProps) {
               <span className="text-sm font-medium">{post.subreddit}</span>
               <span className="text-muted-foreground">•</span>
               <span className="text-xs text-muted-foreground">{post.timeAgo}</span>
+              <button 
+                onClick={() => setIsWhyOpen(true)} 
+                className="ml-1 rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                <Info size={14} />
+              </button>
             </div>
-            <span className="text-xs text-muted-foreground">{post.author}</span>
+            <div className="flex items-center gap-2 mt-0.5">
+              <span className="text-xs text-muted-foreground">{post.author}</span>
+              {post.featured && (
+                <span className="rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-semibold text-orange-700 dark:bg-orange-500/20 dark:text-orange-400">
+                  ⭐ Featured in Reads
+                </span>
+              )}
+            </div>
           </div>
           <button className="rounded-full p-2 transition-colors hover:bg-muted">
             <MoreHorizontal size={20} className="text-muted-foreground" />
@@ -99,6 +114,16 @@ export function Post({ post }: PostProps) {
             <span className="text-sm text-muted-foreground">{post.comments}</span>
           </button>
 
+          {/* Readers Count */}
+          {post.readersCount && (
+            <div className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5">
+              <Eye size={18} color="#00B894" />
+              <span className="text-sm font-medium text-[#00B894]">
+                {post.readersCount >= 1000 ? `${(post.readersCount / 1000).toFixed(1)}k` : post.readersCount}
+              </span>
+            </div>
+          )}
+
           {/* Share */}
           <button className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 transition-colors hover:bg-muted-foreground/20">
             <Share2 size={18} className="text-muted-foreground" />
@@ -121,6 +146,12 @@ export function Post({ post }: PostProps) {
         isOpen={isSheetOpen}
         onClose={() => setIsSheetOpen(false)}
         onSave={handleSave}
+      />
+
+      <WhyThisStorySheet
+        isOpen={isWhyOpen}
+        onClose={() => setIsWhyOpen(false)}
+        subreddit={post.subreddit}
       />
     </>
   );

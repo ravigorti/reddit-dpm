@@ -2,10 +2,13 @@ import { Post } from './Post';
 import { PromotedPost } from './PromotedPost';
 import { Search, Bell } from 'lucide-react';
 import { samplePosts } from '@/data/samplePosts';
+import { SmartReaderNudge } from './SmartReaderNudge';
 
 export function HomeFeed() {
   return (
     <div className="min-h-screen bg-background pb-20">
+      <SmartReaderNudge />
+
       {/* Header */}
       <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-card px-4 py-3">
         <div className="flex items-center gap-2">

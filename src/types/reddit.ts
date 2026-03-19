@@ -8,6 +8,8 @@ export interface Post {
   comments: number;
   timeAgo: string;
   isSaved?: boolean;
+  readersCount?: number;
+  featured?: boolean;
 }
 
 export interface Collection {
