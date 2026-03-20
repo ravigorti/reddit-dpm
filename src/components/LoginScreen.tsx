@@ -7,8 +7,8 @@ interface LoginScreenProps {
 }
 
 const CREDENTIALS = [
-  { email: 'newuser@reddit.com', pass: 'demo', desc: 'New User (Experiences Demo)' },
-  { email: 'reader@reddit.com', pass: 'demo', desc: 'Returning user (No Demo)' }
+  { email: 'newuser@reddit.com', pass: 'RedditDpm2024!', desc: 'New User (Experiences Demo)' },
+  { email: 'reader@reddit.com', pass: 'RedditDpm2024!', desc: 'Returning user (No Demo)' }
 ];
 
 export function LoginScreen({ onLogin }: LoginScreenProps) {
@@ -71,6 +71,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
             <input 
               type="email" 
               placeholder="Email address"
+              autoComplete="username"
               value={email}
               onChange={e => { setEmail(e.target.value); setError(''); }}
               className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
@@ -80,6 +81,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
             <input 
               type="password" 
               placeholder="Password"
+              autoComplete="current-password"
               value={password}
               onChange={e => { setPassword(e.target.value); setError(''); }}
               className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
