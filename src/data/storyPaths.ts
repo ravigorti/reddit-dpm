@@ -9,7 +9,7 @@ export const storyPaths: StoryPath[] = [
     category: 'COLONIAL AMERICA',
     synopsis:
       "Benjamin Franklin embodied the spirit of the American Dream before it was a coined phrase. From a young bookworm in colonial Boston to a revolutionary who challenged empires, discover how curiosity and courage built a nation.",
-    heroImage: '/picturesMKgandhi/Benjamin Franklin.png',
+    heroImage: '/picturesMKgandhi/Benjamin-Franklin.png',
     cardGradient: 'linear-gradient(135deg, #2D1B69 0%, #E67E22 100%)',
     totalChapters: 3,
     estimatedMinutes: 5,
@@ -286,7 +286,7 @@ export const storyPaths: StoryPath[] = [
     category: 'ANCIENT ROME',
     synopsis:
       'In the hills of ancient Italy, a young boy discovers seven eagle chicks — an omen that would echo through Roman history. Gaius Marius would rise from humble origins to reshape the Roman army and claim the consulship seven times.',
-    heroImage: '/picturesMKgandhi/Gaius Marius.png',
+    heroImage: '/picturesMKgandhi/Gaius-Marius.png',
     cardGradient: 'linear-gradient(135deg, #1A5276 0%, #E74C3C 100%)',
     totalChapters: 2,
     estimatedMinutes: 4,
@@ -432,7 +432,7 @@ export const storyPaths: StoryPath[] = [
     category: 'MODERN INDIA',
     synopsis:
       "A shy boy from a small coastal town who was too scared to talk to his classmates would one day bring the most powerful empire on Earth to its knees — without throwing a single punch. This is the story of how silence became the loudest weapon in history.",
-    heroImage: '/picturesMKgandhi/The Salt March.png',
+    heroImage: '/picturesMKgandhi/The-Salt-March.png',
     cardGradient: 'linear-gradient(135deg, #FF9933 0%, #138808 100%)',
     totalChapters: 3,
     estimatedMinutes: 5,
@@ -446,7 +446,7 @@ export const storyPaths: StoryPath[] = [
           {
             id: 'ch1-s1',
             title: 'The Boy Who Was Afraid of Everything',
-            image: '/picturesMKgandhi/The Boy Who Was Afraid of Everything.png',
+            image: '/picturesMKgandhi/The-Boy-Who-Was-Afraid-of-Everything.png',
             paragraphs: [
               {
                 text: "Porbandar, 1869. A tiny coastal town on the western edge of India, where the Arabian Sea crashes against white limestone buildings. Little Mohandas is born into a family of diwan — that's basically the prime minister of a small princely state. Sounds fancy, right? But here's the thing — this kid is painfully, cripplingly shy.",
@@ -474,7 +474,7 @@ export const storyPaths: StoryPath[] = [
           {
             id: 'ch1-s2',
             title: 'The Night That Changed Everything',
-            image: '/picturesMKgandhi/The Night That Changed Everything.png',
+            image: '/picturesMKgandhi/The-Night-That-Changed-Everything.png',
             paragraphs: [
               {
                 text: "1893. Gandhi arrives in South Africa as a young lawyer. He's 23, dressed in a proper English suit, holding a valid first-class ticket. He settles into his seat on a train. Then a white passenger complains. The railway official tells Gandhi to move to third class. Gandhi refuses — he has a first-class ticket.",
@@ -529,7 +529,7 @@ export const storyPaths: StoryPath[] = [
           {
             id: 'ch2-s1',
             title: 'Finding His Voice',
-            image: '/picturesMKgandhi/Finding His Voice.png',
+            image: '/picturesMKgandhi/Finding-His-Voice.png',
             paragraphs: [
               {
                 text: "Remember the boy who couldn't speak in class? That boy is gone. Gandhi starts organizing the Indian community in South Africa. He calls meetings. He writes petitions. He starts a newspaper. The shy kid who ran home from school is now standing in front of hundreds of people, and they're actually listening.",
@@ -555,7 +555,7 @@ export const storyPaths: StoryPath[] = [
           {
             id: 'ch2-s2',
             title: 'Return to India',
-            image: '/picturesMKgandhi/Return to India.png',
+            image: '/picturesMKgandhi/Return-to-India.png',
             paragraphs: [
               {
                 text: "1915. Gandhi returns to India after 21 years in South Africa. But he doesn't return as a lawyer in a suit. He returns in simple khadi cloth — hand-spun, hand-woven, deliberately humble. He travels across India by train, third class, for an entire year. Just watching. Listening. Learning what British rule actually looks like for ordinary people.",
@@ -609,7 +609,7 @@ export const storyPaths: StoryPath[] = [
           {
             id: 'ch3-s1',
             title: 'The Salt March',
-            image: '/picturesMKgandhi/The Salt March.png',
+            image: '/picturesMKgandhi/The-Salt-March.png',
             paragraphs: [
               {
                 text: "1930. The British have made it illegal for Indians to make their own salt. Think about that — you can't pick up salt from your own coastline. Gandhi decides this is the perfect law to break. Not a complicated political demand. Not an abstract principle. Just salt. Something every single Indian, rich or poor, Hindu or Muslim, needs every day.",
@@ -630,7 +630,7 @@ export const storyPaths: StoryPath[] = [
           {
             id: 'ch3-s2',
             title: 'The Legacy of Peace',
-            image: '/picturesMKgandhi/The Legacy of Peace.png',
+            image: '/picturesMKgandhi/The-Legacy-of-Peace.png',
             paragraphs: [
               {
                 text: "August 15, 1947. India is free. But Gandhi isn't celebrating in Delhi with the other leaders. He's in Calcutta, fasting, trying to stop Hindu-Muslim violence with the only weapon he ever trusted — his own willingness to suffer. The country he spent his life liberating is being torn in two by Partition, and it's breaking him.",
