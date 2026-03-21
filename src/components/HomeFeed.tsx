@@ -1,10 +1,30 @@
+import { useState } from 'react';
 import { Post } from './Post';
+import { NormalPostView } from './NormalPostView';
 import { PromotedPost } from './PromotedPost';
 import { Search, Bell } from 'lucide-react';
 import { samplePosts } from '@/data/samplePosts';
 import { SmartReaderNudge } from './SmartReaderNudge';
+import { Post as PostType } from '@/types/reddit';
 
 export function HomeFeed() {
+  const [viewingPost, setViewingPost] = useState<PostType | null>(null);
+
+  // Build a mixed feed: reads posts + normal posts interleaved
+  const readsPostsForFeed = samplePosts.filter(p => p.isReadsPost).slice(0, 3);
+  const normalPosts = samplePosts.filter(p => !p.isReadsPost);
+  
+  // Mix them: reads, normal, reads, normal, promoted ad, normal, reads...
+  const feedPosts: PostType[] = [
+    readsPostsForFeed[0],   // Whistlers (reads)
+    normalPosts[0],          // TIL octopus (normal)
+    normalPosts[1],          // Life hack (normal)
+    readsPostsForFeed[1],   // French Revolution (reads)
+    normalPosts[2],          // Dragon cloud (normal)
+    readsPostsForFeed[2],   // AskReddit intelligence (reads)
+    normalPosts[3],          // Charging station (normal)
+  ].filter(Boolean);
+
   return (
     <div className="min-h-screen bg-background pb-20">
       <SmartReaderNudge />
@@ -41,15 +61,13 @@ export function HomeFeed() {
         ))}
       </div>
 
-      {/* Feed with posts and ad */}
+      {/* Feed with mixed posts and ad */}
       <div className="divide-y divide-border">
-        {/* Post 1 - NoSleep */}
-        <Post post={samplePosts[0]} />
+        {feedPosts.slice(0, 3).map(post => (
+          <Post key={post.id} post={post} onNormalPostClick={setViewingPost} />
+        ))}
         
-        {/* Post 2 - AskReddit */}
-        <Post post={samplePosts[1]} />
-        
-        {/* Promoted Ad (between Post 2 and Post 3) */}
+        {/* Promoted Ad */}
         <PromotedPost
           company="Skillshare"
           tagline="Unlock your creativity with thousands of classes"
@@ -58,15 +76,19 @@ export function HomeFeed() {
           imageEmoji="🎨"
         />
         
-        {/* Post 3 - Technology */}
-        <Post post={samplePosts[2]} />
-        
-        {/* Post 4 - Showerthoughts */}
-        <Post post={samplePosts[3]} />
-        
-        {/* Post 5 - NoSleep 2 */}
-        <Post post={samplePosts[4]} />
+        {feedPosts.slice(3).map(post => (
+          <Post key={post.id} post={post} onNormalPostClick={setViewingPost} />
+        ))}
       </div>
+
+      {/* Normal Post expanded view */}
+      {viewingPost && (
+        <NormalPostView
+          post={viewingPost}
+          isOpen={true}
+          onClose={() => setViewingPost(null)}
+        />
+      )}
     </div>
   );
 }

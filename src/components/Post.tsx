@@ -1,26 +1,28 @@
 import { useState } from 'react';
-import { ArrowBigUp, ArrowBigDown, MessageSquare, Share2, Bookmark, MoreHorizontal, Eye, Info } from 'lucide-react';
+import { ArrowBigUp, ArrowBigDown, MessageSquare, Share2, Bookmark, MoreHorizontal, Eye, Info, BookOpen } from 'lucide-react';
 import { Post as PostType } from '@/types/reddit';
 import { SaveBottomSheet } from './SaveBottomSheet';
 import { useApp } from '@/context/AppContext';
 import { WhyThisStorySheet } from './WhyThisStorySheet';
-import { AuthorAnalyticsSheet } from './AuthorAnalyticsSheet';
+import { AuthorProfileSheet } from './AuthorProfileSheet';
+import { StoryInfoSheet } from './StoryInfoSheet';
 
 interface PostProps {
   post: PostType;
+  onNormalPostClick?: (post: PostType) => void;
 }
 
-export function Post({ post }: PostProps) {
+export function Post({ post, onNormalPostClick }: PostProps) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isWhyOpen, setIsWhyOpen] = useState(false);
-  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isStoryInfoOpen, setIsStoryInfoOpen] = useState(false);
   
-  const { savedStories, toggleCollection } = useApp();
+  const { savedStories, toggleCollection, setActiveTab, setCurrentStoryId, addSavedStory } = useApp();
   const isSaved = savedStories.some(s => s.id === post.id && s.collections?.includes('Read Later'));
   
   const [votes, setVotes] = useState(post.upvotes);
   const [voteState, setVoteState] = useState<'up' | 'down' | null>(null);
-  const { addSavedStory } = useApp();
 
   const handleVote = (direction: 'up' | 'down') => {
     if (voteState === direction) {
@@ -39,13 +41,43 @@ export function Post({ post }: PostProps) {
       subreddit: post.subreddit,
       author: post.author,
       timeAgo: post.timeAgo,
-      estimatedReadTime: '15 min read',
+      estimatedReadTime: post.isReadsPost ? '15 min read' : '2 min read',
     });
+  };
+
+  const handlePostClick = () => {
+    if (post.isReadsPost) {
+      // Navigate to Reads tab and open the story
+      addSavedStory({
+        id: post.id,
+        title: post.title,
+        subreddit: post.subreddit,
+        author: post.author,
+        timeAgo: post.timeAgo,
+        estimatedReadTime: '15 min read',
+      });
+      setCurrentStoryId(post.id);
+      setActiveTab('reads');
+    } else if (onNormalPostClick) {
+      onNormalPostClick(post);
+    }
+  };
+
+  const handleInfoClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (post.isReadsPost) {
+      setIsStoryInfoOpen(true);
+    } else {
+      setIsWhyOpen(true);
+    }
   };
 
   return (
     <>
-      <article className="border-b border-border bg-card">
+      <article 
+        className="border-b border-border bg-card cursor-pointer transition-colors hover:bg-muted/30"
+        onClick={handlePostClick}
+      >
         {/* Header */}
         <div className="flex items-center gap-2 px-4 py-3">
           <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-orange-600" />
@@ -55,7 +87,7 @@ export function Post({ post }: PostProps) {
               <span className="text-muted-foreground">•</span>
               <span className="text-xs text-muted-foreground">{post.timeAgo}</span>
               <button 
-                onClick={() => setIsWhyOpen(true)} 
+                onClick={handleInfoClick} 
                 className="ml-1 rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
                 <Info size={14} />
@@ -63,11 +95,16 @@ export function Post({ post }: PostProps) {
             </div>
             <div className="flex items-center gap-2 mt-0.5">
               <button 
-                onClick={(e) => { e.stopPropagation(); setIsAnalyticsOpen(true); }}
+                onClick={(e) => { e.stopPropagation(); setIsProfileOpen(true); }}
                 className="text-xs font-semibold text-muted-foreground hover:underline hover:text-foreground"
               >
                 {post.author}
               </button>
+              {post.isReadsPost && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-blue-500/20 dark:text-blue-400">
+                  <BookOpen size={10} /> Reads
+                </span>
+              )}
               {post.featured && (
                 <span className="rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-semibold text-orange-700 dark:bg-orange-500/20 dark:text-orange-400">
                   ⭐ Featured in Reads
@@ -75,7 +112,7 @@ export function Post({ post }: PostProps) {
               )}
             </div>
           </div>
-          <button className="rounded-full p-2 transition-colors hover:bg-muted">
+          <button className="rounded-full p-2 transition-colors hover:bg-muted" onClick={(e) => e.stopPropagation()}>
             <MoreHorizontal size={20} className="text-muted-foreground" />
           </button>
         </div>
@@ -89,7 +126,7 @@ export function Post({ post }: PostProps) {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 px-3 pb-3">
+        <div className="flex items-center gap-2 px-3 pb-3" onClick={(e) => e.stopPropagation()}>
           {/* Vote buttons */}
           <div className="flex items-center rounded-full bg-muted">
             <button
@@ -161,10 +198,16 @@ export function Post({ post }: PostProps) {
         subreddit={post.subreddit}
       />
 
-      <AuthorAnalyticsSheet
-        isOpen={isAnalyticsOpen}
-        onClose={() => setIsAnalyticsOpen(false)}
+      <AuthorProfileSheet
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
         authorUsername={post.author}
+      />
+
+      <StoryInfoSheet
+        isOpen={isStoryInfoOpen}
+        onClose={() => setIsStoryInfoOpen(false)}
+        post={post}
       />
     </>
   );

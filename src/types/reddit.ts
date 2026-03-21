@@ -12,6 +12,9 @@ export interface Post {
   featured?: boolean;
   nextPartId?: string;
   partNumber?: number;
+  isReadsPost?: boolean;
+  views?: number;
+  hoursSpent?: number;
 }
 
 export interface Collection {
