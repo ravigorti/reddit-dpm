@@ -82,31 +82,40 @@ export function ReadsIntroWalkthrough() {
   if (!isVisible || !rect) return null;
 
   const step = STEPS[currentStep];
-  
+
   // Calculate tooltip position safely within viewport
   const padding = 16;
+  const tooltipHeight = 160;
   let top = rect.bottom + 16;
+
   if (step.placement === 'top') {
-    top = rect.top - 16 - 150; // estimate tooltip height
+    top = rect.top - 16 - tooltipHeight;
   }
-  
+
+  // Clamp top to keep tooltip on-screen
+  top = Math.max(padding, Math.min(window.innerHeight - tooltipHeight - padding, top));
+
   // Try to center, but keep inside viewport bounds
   let left = rect.left + rect.width / 2;
-  
+  const halfWidth = 140; // 280px width / 2
+  const minLeft = halfWidth + padding;
+  const maxLeft = window.innerWidth - halfWidth - padding;
+  left = Math.max(minLeft, Math.min(maxLeft, left));
+
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[99999] overflow-hidden pointer-events-auto" onClick={dismiss}>
         {/* Spotlight Hole using Box Shadow */}
         <div style={{
-           position: 'absolute',
-           top: rect.top - 8,
-           left: Math.max(0, rect.left - 8),
-           width: Math.min(window.innerWidth, rect.width + 16),
-           height: rect.height + 16,
-           boxShadow: '0 0 0 9999px rgba(0,0,0,0.7)',
-           borderRadius: '12px',
-           pointerEvents: 'none',
-           transition: 'all 0.3s ease-in-out'
+          position: 'absolute',
+          top: rect.top - 8,
+          left: Math.max(0, rect.left - 8),
+          width: Math.min(window.innerWidth - Math.max(0, rect.left - 8), rect.width + 16),
+          height: rect.height + 16,
+          boxShadow: '0 0 0 9999px rgba(0,0,0,0.7)',
+          borderRadius: '12px',
+          pointerEvents: 'none',
+          transition: 'all 0.3s ease-in-out'
         }} />
 
         {/* Tooltip Card */}
@@ -117,14 +126,14 @@ export function ReadsIntroWalkthrough() {
           exit={{ opacity: 0 }}
           onClick={(e) => e.stopPropagation()}
           className="absolute w-[280px] -translate-x-1/2 rounded-xl bg-[#1A1A2E] p-4 text-white shadow-xl"
-          style={{ 
-            top, 
-            left: Math.max(150, Math.min(window.innerWidth - 150, left)),
-            transition: 'top 0.3s ease-in-out, left 0.3s ease-in-out' 
+          style={{
+            top,
+            left,
+            transition: 'top 0.3s ease-in-out, left 0.3s ease-in-out'
           }}
         >
           {/* Arrow pointing at target */}
-          <div 
+          <div
             className="absolute h-4 w-4 rotate-45 bg-[#1A1A2E]"
             style={{
               [step.placement === 'top' ? 'bottom' : 'top']: -6,
@@ -132,7 +141,7 @@ export function ReadsIntroWalkthrough() {
               marginLeft: -8
             }}
           />
-          
+
           <div className="relative z-10">
             <h3 className="mb-2 font-bold leading-tight">{step.title}</h3>
             <p className="mb-4 text-sm text-slate-300 leading-relaxed">{step.body}</p>
@@ -142,7 +151,7 @@ export function ReadsIntroWalkthrough() {
                   <div key={i} className={`h-1.5 rounded-full transition-all ${i === currentStep ? 'w-4 bg-white' : 'w-1.5 bg-white/30'}`} />
                 ))}
               </div>
-              <button 
+              <button
                 onClick={handleNext}
                 className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[#1A1A2E] hover:bg-slate-200 transition-colors"
               >
