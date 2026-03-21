@@ -11,6 +11,7 @@ interface AppContextType {
   setCurrentStoryId: (id: string | null) => void;
   activeStoryPathId: string | null;
   setActiveStoryPathId: (id: string | null) => void;
+  toggleCollection: (storyId: string, collection: string, storyData?: Omit<SavedStory, 'readProgress'>) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -47,6 +48,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const toggleCollection = (storyId: string, collectionName: string, storyData?: Omit<SavedStory, 'readProgress'>) => {
+    setSavedStories((prev) => {
+      const existing = prev.find((s) => s.id === storyId);
+      if (existing) {
+        const collections = existing.collections || [];
+        const has = collections.includes(collectionName);
+        return prev.map((s) => 
+          s.id === storyId ? { ...s, collections: has ? collections.filter(c => c !== collectionName) : [...collections, collectionName] } : s
+        );
+      } else if (storyData) {
+        return [...prev, { ...storyData, readProgress: 0, collections: [collectionName] }];
+      }
+      return prev;
+    });
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -59,6 +76,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setCurrentStoryId,
         activeStoryPathId,
         setActiveStoryPathId,
+        toggleCollection,
       }}
     >
       {children}

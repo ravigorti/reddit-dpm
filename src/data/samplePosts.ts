@@ -124,6 +124,40 @@ The storming of the Bastille wasn't just a symbolic attack on royal tyranny; it 
 
 The Revolution had begun in blood—all seeded by the simple, terrifying reality of an empty stomach.`;
 
+export const diaryContent = `I moved into my late grandfather’s house two weeks ago. It's this big, drafty Victorian place that always smells faintly of cedar and old paper. Yesterday, while clearing out the attic, I found a small leather-bound diary tucked beneath a loose floorboard. 
+
+I expected it to be a record of his daily life, maybe some old recipes or ledgers. But the first entry was dated tomorrow. 
+
+And it perfectly described what I'm wearing right now.
+
+It gets worse. The entries don't just predict the future; they dictate it. Entry #3, dated two days from now, reads: "The man at the door will arrive at precisely 4:13 PM. Do not let him inside. If you see his eyes, it is too late."
+
+I tried writing something else in the diary, trying to change the narrative. But the pen wouldn't leave a mark. It's like the paper rejects anything I try to write.
+
+I’m sitting here, staring at the clock. It’s 4:10 PM. I hear footsteps on the porch. 
+
+God help me.`;
+
+export const lighthouseContent = `In December 1900, three men—James Ducat, Thomas Marshall, and Donald MacArthur—vanished without a trace from the Flannan Isles Lighthouse off the coast of Scotland. 
+
+When the relief ship *Hesperus* arrived on December 26th, they found the island completely deserted. The lighthouse door was closed. Inside, the beds were unmade, the clocks had stopped, and a half-eaten meal was still sitting on the table. Only one set of oilskins was left behind, meaning one of the men had ventured out into the freezing winter storm without his coat—a major breach of protocol.
+
+The strangest piece of evidence was the logbook. The entries leading up to their disappearance detailed a massive, terrifying storm. "Severe winds the likes of which I have never seen in twenty years," Ducat wrote. "Marshall is crying." 
+
+But according to meteorological records from nearby islands and passing ships, the weather during those three days was calm. There was no storm. 
+
+So what were they hiding from? And why did they all disappear?`;
+
+export const prionContent = `If you want to know what truly terrifies biologists, it isn't a super-virus or a resilient bacteria. It's prions.
+
+A prion is a misfolded protein. That’s it. It has no DNA, no RNA, and it isn't alive. It cannot be "killed" because it was never alive to begin with. Standard sterilization techniques—like boiling, radiation, or strong chemicals—often fail to destroy them.
+
+When a prion enters your body, usually through consuming contaminated meat (like in Mad Cow Disease), it travels to your brain. When it encounters a normal, healthy protein, it doesn't infect it like a virus. It simply touches it. That contact forces the healthy protein to misfold and become a prion itself. 
+
+This triggers an unstoppable domino effect. Misfolded proteins clump together, creating microscopic holes in your brain tissue, turning it into a sponge. Symptoms can take years or even decades to appear, but once they do, the decline is rapid, inevitable, and 100% fatal. There is no cure, no treatment, and no immunity. 
+
+Sleep well.`;
+
 export const samplePosts: Post[] = [
   {
     id: 'whistlers-1',
@@ -208,6 +242,42 @@ export const samplePosts: Post[] = [
     comments: 567,
     timeAgo: '1d',
   },
+  {
+    id: 'diary-1',
+    subreddit: 'r/nosleep',
+    author: 'u/attic_dweller',
+    title: 'I found a strange diary in my attic',
+    content: diaryContent,
+    upvotes: 34500,
+    comments: 2130,
+    timeAgo: '4h',
+    readersCount: 54200,
+    featured: true,
+  },
+  {
+    id: 'history-2',
+    subreddit: 'r/history',
+    author: 'u/nautical_lore',
+    title: 'The Unsolved Mystery of the Flannan Isles Lighthouse',
+    content: lighthouseContent,
+    upvotes: 18900,
+    comments: 940,
+    timeAgo: '2d',
+    readersCount: 22100,
+    featured: true,
+  },
+  {
+    id: 'science-1',
+    subreddit: 'r/science',
+    author: 'u/bio_researcher',
+    title: 'The terrifying reality of prions',
+    content: prionContent,
+    upvotes: 62100,
+    comments: 3100,
+    timeAgo: '18h',
+    readersCount: 89000,
+    featured: true,
+  },
 ];
 
 export const carouselData = {
@@ -216,7 +286,8 @@ export const carouselData = {
     { id: 'trend-2', title: 'My Roommate Has Rules', subreddit: 'r/nosleep', author: 'u/scared_tenant', emoji: '🏠', readersCount: 9200, featured: false },
     { id: 'trend-3', title: 'The Stairs in the Woods', subreddit: 'r/nosleep', author: 'u/forest_watcher', emoji: '🌲', readersCount: 12400, featured: true },
     { id: 'trend-4', title: 'I Found My Own Grave', subreddit: 'r/nosleep', author: 'u/lost_soul', emoji: '⚰️', readersCount: 6500, featured: false },
-    { id: 'trend-5', title: 'The Radio Station', subreddit: 'r/nosleep', author: 'u/night_dj', emoji: '📻', readersCount: 11100, featured: true },
+    { id: 'diary-1', title: 'I found a strange diary in my attic', subreddit: 'r/nosleep', author: 'u/attic_dweller', emoji: '📖', readersCount: 54200, featured: true },
+    { id: 'history-2', title: 'The Unsolved Mystery of the Flannan Isles', subreddit: 'r/history', author: 'u/nautical_lore', emoji: '🗼', readersCount: 22100, featured: true },
   ],
   popularGenres: [
     { id: 'genre-1', title: 'Horror', subreddit: 'r/nosleep', author: '', emoji: '👻' },
@@ -228,6 +299,7 @@ export const carouselData = {
   ],
   topOnReddit: [
     { id: 'history-1', title: 'How bread sparked the French Revolution', subreddit: 'r/AskHistorians', author: 'u/midnight_historian', emoji: '🥖', readersCount: 38700, featured: true },
+    { id: 'science-1', title: 'The terrifying reality of prions', subreddit: 'r/science', author: 'u/bio_researcher', emoji: '🔬', readersCount: 89000, featured: true },
     { id: 'top-1', title: 'The Borrasca Series', subreddit: 'r/nosleep', author: 'u/The_Dalek_Emperor', emoji: '⛰️', readersCount: 145000, featured: true },
     { id: 'top-2', title: 'My Dead Girlfriend', subreddit: 'r/nosleep', author: 'u/bloodstains', emoji: '💀', readersCount: 89000, featured: true },
     { id: 'top-3', title: 'The Left/Right Game', subreddit: 'r/nosleep', author: 'u/NeonTempo', emoji: '🎮', readersCount: 112000, featured: true },

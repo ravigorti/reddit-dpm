@@ -5,9 +5,12 @@ import { useApp } from '@/context/AppContext';
 
 interface JumpBackInProps {
   stories: SavedStory[];
+  hideHeader?: boolean;
+  limit?: number | null;
+  onStoryClick?: () => void;
 }
 
-export function JumpBackIn({ stories }: JumpBackInProps) {
+export function JumpBackIn({ stories, hideHeader, limit = 3, onStoryClick }: JumpBackInProps) {
   const { setCurrentStoryId } = useApp();
 
   if (stories.length === 0) return null;
@@ -16,13 +19,16 @@ export function JumpBackIn({ stories }: JumpBackInProps) {
   const notStartedStories = stories.filter(s => s.readProgress === 0);
   const completedStories = stories.filter(s => s.readProgress >= 100);
   
-  const displayStories = [...inProgressStories, ...notStartedStories, ...completedStories].slice(0, 3);
+  let displayStories = [...inProgressStories, ...notStartedStories, ...completedStories];
+  if (limit !== null) {
+    displayStories = displayStories.slice(0, limit);
+  }
 
   if (displayStories.length === 0) return null;
 
   return (
-    <section className="px-4 py-4">
-      <h2 className="mb-3 text-lg font-bold">Jump Back In</h2>
+    <section className={`px-4 py-4 ${hideHeader ? 'py-0' : ''}`}>
+      {!hideHeader && <h2 className="mb-3 text-lg font-bold">Jump Back In</h2>}
       
       <div className="space-y-3">
         {displayStories.map((story, index) => (
@@ -31,7 +37,10 @@ export function JumpBackIn({ stories }: JumpBackInProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            onClick={() => setCurrentStoryId(story.id)}
+            onClick={() => {
+              setCurrentStoryId(story.id);
+              onStoryClick?.();
+            }}
             className="group relative flex w-full items-center gap-4 overflow-hidden rounded-xl bg-card p-3 text-left transition-colors hover:bg-muted"
           >
             {/* Thumbnail */}

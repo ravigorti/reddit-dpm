@@ -29,6 +29,7 @@ export interface SavedStory {
   readProgress: number;
   timeAgo: string;
   estimatedReadTime: string;
+  collections?: string[];
 }
 
 export type TabType = 'home' | 'communities' | 'reads' | 'chat';

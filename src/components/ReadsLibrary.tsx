@@ -7,10 +7,16 @@ import { StoryPathsCarousel } from './story-paths/StoryPathsCarousel';
 import { carouselData } from '@/data/samplePosts';
 import { ReadsIntroWalkthrough } from './ReadsIntroWalkthrough';
 import { DailyReadingGoal } from './DailyReadingGoal';
+import { CollectionViewSheet } from './CollectionViewSheet';
+import { useState } from 'react';
 
 export function ReadsLibrary() {
   const { savedStories, setActiveStoryPathId } = useApp();
   const navigate = useNavigate();
+  const [activeCollection, setActiveCollection] = useState<string | null>(null);
+
+  const readLaterCount = savedStories.filter(s => s.collections?.includes('Read Later')).length;
+  const favoritesCount = savedStories.filter(s => s.collections?.includes('Favorites')).length;
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -98,18 +104,25 @@ export function ReadsLibrary() {
       <section className="px-4 py-4">
         <h2 className="mb-3 text-lg font-bold">Your Collections</h2>
         <div className="grid grid-cols-2 gap-3">
-          <button className="flex flex-col items-center justify-center rounded-xl bg-card p-6 transition-colors hover:bg-muted">
+          <button onClick={() => setActiveCollection('Read Later')} className="flex flex-col items-center justify-center rounded-xl bg-card p-6 transition-colors hover:bg-muted">
             <span className="mb-2 text-3xl">📚</span>
             <span className="text-sm font-medium">Read Later</span>
-            <span className="text-xs text-muted-foreground">{savedStories.length} stories</span>
+            <span className="text-xs text-muted-foreground">{readLaterCount} stories</span>
           </button>
-          <button className="flex flex-col items-center justify-center rounded-xl bg-card p-6 transition-colors hover:bg-muted">
+          <button onClick={() => setActiveCollection('Favorites')} className="flex flex-col items-center justify-center rounded-xl bg-card p-6 transition-colors hover:bg-muted">
             <span className="mb-2 text-3xl">❤️</span>
             <span className="text-sm font-medium">Favorites</span>
-            <span className="text-xs text-muted-foreground">0 stories</span>
+            <span className="text-xs text-muted-foreground">{favoritesCount} stories</span>
           </button>
         </div>
       </section>
+
+      <CollectionViewSheet 
+        isOpen={activeCollection !== null}
+        onClose={() => setActiveCollection(null)}
+        collectionName={activeCollection || ''}
+        stories={savedStories.filter(s => s.collections?.includes(activeCollection || ''))}
+      />
     </div>
   );
 }
