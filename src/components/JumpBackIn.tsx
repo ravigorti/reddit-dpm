@@ -14,8 +14,9 @@ export function JumpBackIn({ stories }: JumpBackInProps) {
 
   const inProgressStories = stories.filter(s => s.readProgress > 0 && s.readProgress < 100);
   const notStartedStories = stories.filter(s => s.readProgress === 0);
+  const completedStories = stories.filter(s => s.readProgress >= 100);
   
-  const displayStories = [...inProgressStories, ...notStartedStories].slice(0, 3);
+  const displayStories = [...inProgressStories, ...notStartedStories, ...completedStories].slice(0, 3);
 
   if (displayStories.length === 0) return null;
 
@@ -69,7 +70,7 @@ export function JumpBackIn({ stories }: JumpBackInProps) {
                 />
               </div>
               <p className="mt-1 text-[10px] text-muted-foreground">
-                {story.readProgress === 0 ? 'Not started' : `${Math.round(story.readProgress)}% complete`}
+                {story.readProgress === 0 ? 'Not started' : story.readProgress >= 100 ? 'Completed' : `${Math.round(story.readProgress)}% complete`}
               </p>
             </div>
           </motion.button>

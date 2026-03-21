@@ -10,6 +10,8 @@ export interface Post {
   isSaved?: boolean;
   readersCount?: number;
   featured?: boolean;
+  nextPartId?: string;
+  partNumber?: number;
 }
 
 export interface Collection {

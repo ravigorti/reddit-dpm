@@ -9,9 +9,11 @@ interface SessionSummaryProps {
   onTakeBreak: () => void;
   onKeepReading: () => void;
   accuracy?: number; // for story paths
+  hasNextPart?: boolean;
+  nextPartLabel?: string;
 }
 
-export function SessionSummary({ title, timeSpentSeconds, onTakeBreak, onKeepReading, accuracy }: SessionSummaryProps) {
+export function SessionSummary({ title, timeSpentSeconds, onTakeBreak, onKeepReading, accuracy, hasNextPart, nextPartLabel }: SessionSummaryProps) {
   const [goal, setGoal] = useState<number | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const minutes = Math.max(1, Math.round(timeSpentSeconds / 60));
@@ -128,7 +130,7 @@ export function SessionSummary({ title, timeSpentSeconds, onTakeBreak, onKeepRea
           onClick={onKeepReading}
           className="w-full rounded-full bg-orange-100 dark:bg-orange-500/20 py-4 text-sm font-bold text-orange-600 dark:text-orange-400 transition-colors hover:bg-orange-200"
         >
-          Keep reading
+          {hasNextPart && nextPartLabel ? nextPartLabel : "Keep reading"}
         </button>
       </motion.div>
     </div>

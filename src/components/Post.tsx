@@ -4,6 +4,7 @@ import { Post as PostType } from '@/types/reddit';
 import { SaveBottomSheet } from './SaveBottomSheet';
 import { useApp } from '@/context/AppContext';
 import { WhyThisStorySheet } from './WhyThisStorySheet';
+import { AuthorAnalyticsSheet } from './AuthorAnalyticsSheet';
 
 interface PostProps {
   post: PostType;
@@ -12,6 +13,7 @@ interface PostProps {
 export function Post({ post }: PostProps) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isWhyOpen, setIsWhyOpen] = useState(false);
+  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(post.isSaved || false);
   const [votes, setVotes] = useState(post.upvotes);
   const [voteState, setVoteState] = useState<'up' | 'down' | null>(null);
@@ -60,7 +62,12 @@ export function Post({ post }: PostProps) {
               </button>
             </div>
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-xs text-muted-foreground">{post.author}</span>
+              <button 
+                onClick={(e) => { e.stopPropagation(); setIsAnalyticsOpen(true); }}
+                className="text-xs font-semibold text-muted-foreground hover:underline hover:text-foreground"
+              >
+                {post.author}
+              </button>
               {post.featured && (
                 <span className="rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-semibold text-orange-700 dark:bg-orange-500/20 dark:text-orange-400">
                   ⭐ Featured in Reads
@@ -152,6 +159,12 @@ export function Post({ post }: PostProps) {
         isOpen={isWhyOpen}
         onClose={() => setIsWhyOpen(false)}
         subreddit={post.subreddit}
+      />
+
+      <AuthorAnalyticsSheet
+        isOpen={isAnalyticsOpen}
+        onClose={() => setIsAnalyticsOpen(false)}
+        authorUsername={post.author}
       />
     </>
   );

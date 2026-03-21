@@ -1,5 +1,6 @@
-import { Search, User } from 'lucide-react';
+import { Search, User, Trophy } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { useNavigate } from 'react-router-dom';
 import { JumpBackIn } from './JumpBackIn';
 import { HorizontalCarousel } from './HorizontalCarousel';
 import { StoryPathsCarousel } from './story-paths/StoryPathsCarousel';
@@ -9,6 +10,7 @@ import { DailyReadingGoal } from './DailyReadingGoal';
 
 export function ReadsLibrary() {
   const { savedStories, setActiveStoryPathId } = useApp();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -19,6 +21,13 @@ export function ReadsLibrary() {
         <div className="flex items-center justify-between px-4 py-3">
           <h1 className="text-2xl font-bold">Reads</h1>
           <div className="flex items-center gap-2">
+            <button 
+              onClick={() => navigate('/reads/leaderboard')}
+              className="flex items-center gap-1.5 rounded-full bg-yellow-500/10 px-3 py-1.5 transition-colors hover:bg-yellow-500/20 border border-yellow-500/20 text-yellow-500"
+            >
+              <Trophy size={16} />
+              <span className="text-xs font-bold">Top Writers</span>
+            </button>
             <button className="rounded-full p-2 transition-colors hover:bg-muted">
               <Search size={22} className="text-foreground" />
             </button>

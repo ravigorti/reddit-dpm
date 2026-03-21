@@ -1,45 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowUpCircle, Eye, Bookmark, TrendingUp } from 'lucide-react';
+import { leaderboardAuthors, AuthorStats } from '@/data/authors';
 
 interface AuthorAnalyticsSheetProps {
   isOpen: boolean;
   onClose: () => void;
   authorUsername: string;
 }
-
-// Hardcoded data per author
-const authorDataMap: Record<string, any> = {
-  'u/forest_watcher': {
-    avatarGradient: 'from-emerald-500 to-teal-700',
-    initials: 'FW',
-    featuredCount: 4,
-    saves: '1,240',
-    upvotes: '3.2k',
-    readers: '12.4k',
-    completionRate: 78,
-    readDepth: [
-      { label: 'Opened', percent: 100, color: 'bg-green-500' },
-      { label: 'Read 25%', percent: 89, color: 'bg-green-500' },
-      { label: 'Read 50%', percent: 72, color: 'bg-amber-500' },
-      { label: 'Finished', percent: 78, color: 'bg-green-500' },
-    ]
-  },
-  'u/curious_mind_42': {
-    avatarGradient: 'from-blue-500 to-indigo-700',
-    initials: 'CM',
-    featuredCount: 2,
-    saves: '850',
-    upvotes: '1.8k',
-    readers: '8.2k',
-    completionRate: 65,
-    readDepth: [
-      { label: 'Opened', percent: 100, color: 'bg-green-500' },
-      { label: 'Read 25%', percent: 82, color: 'bg-green-500' },
-      { label: 'Read 50%', percent: 60, color: 'bg-amber-500' },
-      { label: 'Finished', percent: 65, color: 'bg-green-500' },
-    ]
-  }
-};
 
 const defaultData = {
   avatarGradient: 'from-primary to-orange-600',
@@ -58,7 +25,24 @@ const defaultData = {
 };
 
 export function AuthorAnalyticsSheet({ isOpen, onClose, authorUsername }: AuthorAnalyticsSheetProps) {
-  const data = authorDataMap[authorUsername] || defaultData;
+  const authorMatch = leaderboardAuthors.find(a => a.username === authorUsername);
+  
+  const data = authorMatch ? {
+    avatarGradient: authorMatch.avatarGradient,
+    initials: authorMatch.initials,
+    featuredCount: authorMatch.storiesFeatured,
+    saves: Math.max(100, Math.floor(authorMatch.readers * 0.1)).toLocaleString(),
+    upvotes: Math.max(200, Math.floor(authorMatch.readers * 0.25)).toLocaleString(),
+    readers: (authorMatch.readers / 1000).toFixed(1) + 'k',
+    completionRate: authorMatch.completionRate,
+    readDepth: [
+      { label: 'Opened', percent: 100, color: 'bg-green-500' },
+      { label: 'Read 25%', percent: Math.min(100, authorMatch.completionRate + 15), color: 'bg-green-500' },
+      { label: 'Read 50%', percent: Math.min(100, authorMatch.completionRate + 8), color: 'bg-amber-500' },
+      { label: 'Finished', percent: authorMatch.completionRate, color: 'bg-green-500' },
+    ]
+  } : defaultData;
+
   const circumference = 2 * Math.PI * 24;
   const strokeDashoffset = circumference - (data.completionRate / 100) * circumference;
 

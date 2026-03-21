@@ -58,21 +58,110 @@ All of them smiling.
 
 I'm writing this from the ranger station. It's almost 2 AM. Outside, the forest is silent. Too silent.
 
-But I can hear them starting to whistle.
+But I can hear them starting to whistle.`;
 
-[UPDATE COMING SOON]`;
+export const whistlersPart2Content = `The whistling isn't the worst part anymore. It’s what happens when the whistling stops.
+
+I spent yesterday barricading the ranger station. I dragged the heavy oak desk in front of the front door. I bolted the reinforced steel shutters over the main windows. But no matter what I did, the place felt horribly exposed. The wood paneling of the cabin is meant to keep out the chill and maybe a determined black bear, not... whatever these things are.
+
+Night four began much like the others. At exactly 2 AM, the first whistle pierced the stillness. Three ascending notes.
+
+But tonight, they didn’t stay at the tree line.
+
+Through the crack in the window shutters, I watched them step into the clearing. Ten of them. No, fifteen. The moonlight gave them an awful, stark clarity. I saw how their knees bent backwards like a bird's, how their skin hung loose on impossibly long, skeletal limbs.
+
+They began to walk forward.
+
+As they moved toward the cabin, the chorus of whistling swelled until it felt like a physical pressure inside my skull. I had the shotgun aimed straight at the door. My finger trembled over the trigger.
+
+Then, at exactly 3:00 AM, the whistling stopped.
+
+Total, crushing silence descended like a lead weight.
+
+Then came the rustling. It wasn't coming from outside. It was coming from directly above me. Claws, heavy and sharp, were dragging across the roof shingles.
+
+*Skitch... skitch... skitch...*
+
+I looked up at the ceiling. The cabin's roof only had thin insulation. I could hear them dragging their immense bodies over the structure. Then, the scratching focused on one specific point.
+
+The chimney.
+
+I had boarded it up that morning, shoving the heavy cast-iron stove unit in front of the flue. For twenty minutes, I listened as whatever was up there probed the chimney cap, tearing at the metal housing.
+
+Then, from the flue, I heard a voice.
+
+Not a whistle. A voice.
+
+It sounded exactly like Dale.
+
+"Station Seven, this is Base. Are you in there? We've brought backup. Open the door."
+
+My heart leaped. Dale had heard my broken radio call! But then my blood turned to ice water. 
+
+The voice wasn't coming from the radio. It was coming from the chimney. And the cadence was... wrong. Too slow. Too mechanical. Like someone reading a script in a language they didn't speak.
+
+"Sta-tion Sev-en. I've brought back-up. O-pen the door."
+
+They don't just mimic sounds. They mimic us.`;
+
+export const frenchRevContent = `On a sweltering July day in 1789, a furious Parisian mob stormed the Bastille prison, forever altering the course of European history. But why were they so angry? While textbooks often highlight the radical philosophy of the Enlightenment and the decadent taxation policies of the monarchy, one of the most immediate catalysts for the French Revolution was far more fundamental: bread.
+
+In the late 18th century, bread was the absolute staple of the French diet. The average worker consumed nearly two to three pounds of it every single day. Due to incredibly poor harvests in 1788, caused by an unseasonable spring drought followed by a devastating summer hailstorm, grain yields plummeted.
+
+The resulting shortage caused the price of bread to skyrocket. By the spring of 1789, a peasant could spend up to 88% of their daily wages just to buy a single loaf of bread. Starvation was a very real, very imminent threat.
+
+Meanwhile, King Louis XVI and his wife, Marie Antoinette, resided in the opulent Palace of Versailles. While the queen likely never uttered the famous phrase "Let them eat cake," her extravagant spending on fashion, hair towers, and a mocked-up 'peasant village' at the Petit Trianon made her a prime target for public hatred. French citizens were literally starving to death in the streets of Paris while the monarchy threw lavish banquets only twelve miles away.
+
+The anger wasn't just directed at the crown. The nobility and clergy (the First and Second Estates) paid almost no taxes, while the poorest commoners (the Third Estate) funded the nation. When the King convened the Estates-General to address the massive national debt—largely accrued by funding the American Revolution—the Third Estate demanded fair representation.
+
+When they were locked out of the meeting hall, they moved to a nearby indoor tennis court and swore the famous "Tennis Court Oath," vowing not to leave until they had drafted a new constitution for France.
+
+This political defiance, combined with the extreme economic desperation and crippling hunger gripping Paris, created a powder keg. When rumor spread that the King was marching his military into Paris to crush the newly formed National Assembly, the people panicked. They needed weapons. They needed gunpowder. 
+
+And the Bastille prison, a massive medieval fortress looming over eastern Paris, held massive stores of gunpowder. 
+
+The storming of the Bastille wasn't just a symbolic attack on royal tyranny; it was a desperate, violent raid by starving people fighting for their lives. The governor of the prison was beheaded, and his head paraded through the streets on a pike. 
+
+The Revolution had begun in blood—all seeded by the simple, terrifying reality of an empty stomach.`;
 
 export const samplePosts: Post[] = [
   {
     id: 'whistlers-1',
     subreddit: 'r/nosleep',
     author: 'u/forest_watcher',
-    title: 'The Whistlers in the Woods - I never should have taken that night shift at the ranger station',
+    title: 'The Whistlers in the Woods - I never should have taken that night shift at the ranger station (Part 1)',
     content: whistlersContent,
     upvotes: 15234,
     comments: 892,
     timeAgo: '5h',
     readersCount: 12400,
+    featured: true,
+    partNumber: 1,
+    nextPartId: 'whistlers-2',
+  },
+  {
+    id: 'whistlers-2',
+    subreddit: 'r/nosleep',
+    author: 'u/forest_watcher',
+    title: 'The Whistlers in the Woods - They are at the chimney (Part 2)',
+    content: whistlersPart2Content,
+    upvotes: 11200,
+    comments: 650,
+    timeAgo: '1h',
+    readersCount: 4100,
+    featured: true,
+    partNumber: 2,
+  },
+  {
+    id: 'history-1',
+    subreddit: 'r/AskHistorians',
+    author: 'u/midnight_historian',
+    title: 'How bread and a terrible harvest actually sparked the French Revolution',
+    content: frenchRevContent,
+    upvotes: 24500,
+    comments: 1340,
+    timeAgo: '12h',
+    readersCount: 38700,
     featured: true,
   },
   {
@@ -138,10 +227,10 @@ export const carouselData = {
     { id: 'genre-6', title: 'Fantasy', subreddit: 'r/Fantasy', author: '', emoji: '🐉' },
   ],
   topOnReddit: [
+    { id: 'history-1', title: 'How bread sparked the French Revolution', subreddit: 'r/AskHistorians', author: 'u/midnight_historian', emoji: '🥖', readersCount: 38700, featured: true },
     { id: 'top-1', title: 'The Borrasca Series', subreddit: 'r/nosleep', author: 'u/The_Dalek_Emperor', emoji: '⛰️', readersCount: 145000, featured: true },
     { id: 'top-2', title: 'My Dead Girlfriend', subreddit: 'r/nosleep', author: 'u/bloodstains', emoji: '💀', readersCount: 89000, featured: true },
     { id: 'top-3', title: 'The Left/Right Game', subreddit: 'r/nosleep', author: 'u/NeonTempo', emoji: '🎮', readersCount: 112000, featured: true },
     { id: 'top-4', title: 'Penpal', subreddit: 'r/nosleep', author: 'u/1000Vultures', emoji: '✉️', readersCount: 250000, featured: true },
-    { id: 'top-5', title: 'The Patient That Nearly Drove Me Out', subreddit: 'r/nosleep', author: 'u/Dr_Creepen', emoji: '🏥', readersCount: 45000, featured: false },
   ],
 };
