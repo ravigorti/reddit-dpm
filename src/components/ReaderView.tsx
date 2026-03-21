@@ -1,42 +1,52 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Share2, Bookmark, Settings, Clock } from 'lucide-react';
+import { ArrowLeft, Share2, Bookmark, Settings, Clock, ArrowBigUp, ArrowBigDown, MessageSquare } from 'lucide-react';
 import { useReadingProgress } from '@/hooks/useReadingProgress';
 import { useApp } from '@/context/AppContext';
 import { AuthorAnalyticsSheet } from './AuthorAnalyticsSheet';
 import { SessionSummary } from './SessionSummary';
+import { samplePosts } from '@/data/samplePosts';
 
 export function ReaderView() {
   const progress = useReadingProgress();
-  const { savedStories, updateStoryProgress, setCurrentStoryId, currentStoryId, setActiveTab } = useApp();
+  const { savedStories, updateStoryProgress, setCurrentStoryId, currentStoryId, setActiveTab, addSavedStory } = useApp();
   const progressRef = useRef(progress);
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [sessionSeconds, setSessionSeconds] = useState(0);
+  const [votes, setVotes] = useState(0);
+  const [voteState, setVoteState] = useState<'up' | 'down' | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => setSessionSeconds((s) => s + 1), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  const savedStory = savedStories.find((s) => s.id === currentStoryId);
+  const fullStory = samplePosts.find((p) => p.id === currentStoryId);
+
   useEffect(() => {
-    if (progress >= 95 && !showSummary) {
-      const t = setTimeout(() => setShowSummary(true), 1000); // 1s delay
-      return () => clearTimeout(t);
+    if (fullStory) {
+      setVotes(fullStory.upvotes);
+      window.scrollTo(0, 0);
     }
-  }, [progress, showSummary]);
+  }, [currentStoryId, fullStory?.upvotes]);
 
-  const story = savedStories.find((s) => s.id === currentStoryId);
-
-  // Update progress ref
+  // Update progress ref robustly to prevent 0-resets on layout jumps
   useEffect(() => {
+    if (showSummary) {
+      progressRef.current = 100;
+      return;
+    }
     progressRef.current = progress;
-  }, [progress]);
+  }, [progress, showSummary]);
 
   // Save progress on exit
   const handleBack = () => {
     if (progress >= 95) {
-      setShowSummary(true);
+      if (!showSummary) {
+        setShowSummary(true);
+      }
       return;
     }
     doExit();
@@ -56,19 +66,45 @@ export function ReaderView() {
   };
 
   const handleKeepReading = () => {
+    if (fullStory?.nextPartId) {
+      const nextPost = samplePosts.find(p => p.id === fullStory.nextPartId);
+      if (nextPost) {
+        // Save current as 100% since they finished it
+        updateStoryProgress(currentStoryId!, 100);
+        
+        // Setup next part
+        addSavedStory({
+          id: nextPost.id,
+          title: nextPost.title,
+          subreddit: nextPost.subreddit,
+          author: nextPost.author,
+          timeAgo: nextPost.timeAgo,
+          estimatedReadTime: '15 min read',
+        });
+        setCurrentStoryId(nextPost.id);
+        
+        // Reset states to read new part
+        setShowSummary(false);
+        setSessionSeconds(0);
+        window.scrollTo(0, 0);
+        return;
+      }
+    }
     doExit();
     setActiveTab('reads');
   };
 
-  if (!story) return null;
+  if (!savedStory || !fullStory) return null;
 
   if (showSummary) {
     return (
       <SessionSummary
-        title={story.title}
+        title={fullStory.title}
         timeSpentSeconds={sessionSeconds}
         onTakeBreak={handleTakeBreak}
         onKeepReading={handleKeepReading}
+        hasNextPart={!!fullStory.nextPartId}
+        nextPartLabel={fullStory.partNumber ? `Continue to Part ${fullStory.partNumber + 1}` : 'Continue to next part'}
       />
     );
   }
@@ -120,25 +156,29 @@ export function ReaderView() {
       <article className="mx-auto max-w-2xl px-5 py-8">
         {/* Meta */}
         <div className="mb-6">
-          <p className="mb-2 text-sm text-primary">{story.subreddit}</p>
+          <p className="mb-2 text-sm font-semibold text-primary">{fullStory.subreddit}</p>
           <h1 className="mb-4 font-reading text-2xl font-bold leading-tight">
-            {story.title.replace(' (Part 1)', '').replace(' - I never should have taken that night shift at the ranger station', '')}
+            {fullStory.title}
           </h1>
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-orange-600" />
+            <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${fullStory.author === 'u/midnight_historian' ? 'from-amber-500 to-orange-700' : 'from-primary to-orange-600'} text-sm font-bold text-white`}>
+              {fullStory.author === 'u/midnight_historian' ? 'MH' : fullStory.author === 'u/forest_watcher' ? 'FW' : 'AU'}
+            </div>
             <div>
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => setIsAnalyticsOpen(true)}
                   className="font-medium text-left hover:underline"
                 >
-                  {story.author}
+                  {fullStory.author}
                 </button>
-                <div className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-semibold text-orange-700 dark:bg-orange-500/20 dark:text-orange-400">
-                  <span className="text-[8px]">⭐</span> Featured in Reads
-                </div>
+                {fullStory.featured && (
+                  <div className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-semibold text-orange-700 dark:bg-orange-500/20 dark:text-orange-400">
+                    <span className="text-[8px]">⭐</span> Featured in Reads
+                  </div>
+                )}
               </div>
-              <p className="text-sm text-muted-foreground">{story.timeAgo} • {story.estimatedReadTime}</p>
+              <p className="text-sm text-muted-foreground">{fullStory.timeAgo} • {savedStory.estimatedReadTime || '15 min read'}</p>
             </div>
           </div>
         </div>
@@ -148,94 +188,93 @@ export function ReaderView() {
 
         {/* Story content */}
         <div className="font-reading text-lg leading-relaxed text-foreground/90 [&>p]:mb-6">
-          <p>It started three weeks ago, on my first night shift at the Blackwood Ranger Station. The station sits at the edge of a 50,000-acre forest preserve, miles from the nearest town. My supervisor, Dale, had warned me about the isolation.</p>
-
-          <p>"Most folks can't handle the silence," he'd said, handing me the keys. "But you'll get used to it. Just don't go wandering after dark."</p>
-
-          <p>I thought he was being dramatic. I was wrong.</p>
-
-          <p>The first night was quiet—eerily so. No crickets, no owls, no wind through the pines. Just that heavy, pressing silence that makes your ears ring. Around 2 AM, I was halfway through a thermos of coffee when I heard it: a low, melodic whistle drifting through the trees.</p>
-
-          <p>Three notes. Ascending. Like someone calling a dog.</p>
-
-          <p>I stepped onto the porch, flashlight in hand. The beam cut through the darkness, illuminating nothing but endless rows of pine trees. The whistling had stopped.</p>
-
-          <p>"Hello?" My voice seemed to die the moment it left my lips, swallowed by the forest.</p>
-
-          <p>Nothing.</p>
-
-          <p>I went back inside and locked the door. Probably just a bird, I told myself. Some nocturnal species I didn't recognize.</p>
-
-          <p>But birds don't whistle in perfect musical intervals.</p>
-
-          <p>The second night, it happened again. Same time. Same three notes. But this time, when I looked out the window, I saw something that made my blood freeze. About fifty yards from the station, at the edge of the tree line, stood a figure.</p>
-
-          <p>Tall. Impossibly tall. At least seven feet, maybe more. Its proportions were wrong—arms too long, legs bent at strange angles. And it was pale, so pale it seemed to glow in the moonlight.</p>
-
-          <p>It was whistling.</p>
-
-          <p>I grabbed the emergency radio, hands shaking. "Base, this is Station Seven. I've got a... a person outside. Requesting backup."</p>
-
-          <p>Static. Then Dale's voice: "Station Seven, repeat your message?"</p>
-
-          <p>I looked back at the window.</p>
-
-          <p>The figure was gone.</p>
-
-          <p>"Never mind," I said. "Must have been a deer."</p>
-
-          <p>But deer don't whistle. And deer don't leave footprints with only three toes.</p>
-
-          <p>I found those prints the next morning, pressed deep into the mud around the station. They circled the building twice before disappearing back into the forest. Each print was nearly a foot long, with deep gouges where the toes—if that's what they were—had dug into the earth.</p>
-
-          <p>I should have quit right then. Should have driven back to town and never looked back. But something kept me there. Curiosity, maybe. Or something worse.</p>
-
-          <p>That third night, I set up a trail camera facing the tree line. I sat in the dark, watching, waiting. At 2 AM, the whistle came again. Three notes. Ascending.</p>
-
-          <p>But this time, it wasn't alone.</p>
-
-          <p>From somewhere deeper in the forest, another whistle answered. Same three notes. Then another. And another. Soon the night was filled with them, a chorus of whistles echoing through the trees. Dozens of them. Maybe hundreds.</p>
-
-          <p>I didn't sleep that night. I sat with my back against the wall, shotgun across my knees, listening to them call to each other until dawn.</p>
-
-          <p>When I checked the trail camera footage the next morning, my hands wouldn't stop shaking. The camera had captured something at 2:17 AM. The image was grainy, distorted by motion blur. But I could make out enough.</p>
-
-          <p>Six figures standing at the tree line. All of them tall, pale, wrong. All of them looking directly at the camera.</p>
-
-          <p>All of them smiling.</p>
-
-          <p>The next few days blurred together. I reported the footprints to Dale, showed him photos. He went pale but said nothing, just told me to "keep my head down and do my job." That night, I noticed something new: scratch marks on the outside of my cabin door. Long, vertical gouges in the wood, exactly at eye level.</p>
-
-          <p>They hadn't been there that morning.</p>
-
-          <p>I started keeping a journal. Not for evidence—by then, I knew no one would believe me—but for myself. To prove I wasn't losing my mind. I documented everything: the whistles (always at 2 AM, always three notes), the footprints (getting closer each night), the scratches (multiplying on every surface they could reach).</p>
-
-          <p>On night seven, they knocked.</p>
-
-          <p>Three knocks. Slow. Deliberate. On the back door of the ranger station—the one that faces nothing but miles of unbroken forest.</p>
-
-          <p>I didn't answer. I didn't even breathe.</p>
-
-          <p>They knocked again. And again. And again. For three hours straight, those same three knocks repeated at exact one-minute intervals. I timed them. I counted them. I pressed my hands over my ears and screamed into a pillow, but still, those knocks continued.</p>
-
-          <p>Then, at exactly 5 AM, they stopped.</p>
-
-          <p>When dawn broke, I opened the back door with the shotgun raised. Nothing. No prints. No scratches. Just the forest, silent and still, as if the entire night had been a fever dream.</p>
-
-          <p>But on the doorframe, carved into the wood with surgical precision, were three words:</p>
-
-          <p><strong>WE HEAR YOU</strong></p>
-
-          <p>I'm writing this from the ranger station. It's 1:45 AM. In fifteen minutes, they'll start whistling again. I've barricaded the doors. I've loaded the shotgun. I've said every prayer I can remember from a childhood spent in Sunday school.</p>
-
-          <p>But something is different tonight. The silence is heavier. The darkness outside seems thicker. And for the first time, I can hear something new beneath the whistle.</p>
-
-          <p>Footsteps. Hundreds of them. Getting closer.</p>
-
-          <p>They're not just watching anymore.</p>
-
-          <p className="text-center text-muted-foreground italic mt-12">— End of Part 1 —</p>
+          {fullStory.content.split('\n\n').map((paragraph, idx) => (
+            <p key={idx}>{paragraph}</p>
+          ))}
+          
+          {fullStory.partNumber && (
+             <p className="text-center text-muted-foreground italic mt-12">— End of Part {fullStory.partNumber} —</p>
+          )}
         </div>
+
+        {/* Upvotes */}
+        <div className="mt-8 flex items-center justify-between border-y border-border py-4">
+          <div className="flex items-center rounded-full bg-muted">
+            <button
+              onClick={() => {
+                if (voteState === 'up') { setVoteState(null); setVotes(fullStory.upvotes); }
+                else { setVoteState('up'); setVotes(fullStory.upvotes + 1); }
+              }}
+              className="flex items-center gap-1 rounded-l-full px-4 py-2 transition-colors hover:bg-muted-foreground/20"
+            >
+              <ArrowBigUp size={24} className={voteState === 'up' ? 'fill-primary text-primary' : 'text-muted-foreground'} />
+            </button>
+            <span className={`text-base font-bold ${voteState === 'up' ? 'text-primary' : voteState === 'down' ? 'text-reddit-downvote' : ''}`}>
+              {votes >= 1000 ? `${(votes / 1000).toFixed(1)}k` : votes}
+            </span>
+            <button
+              onClick={() => {
+                if (voteState === 'down') { setVoteState(null); setVotes(fullStory.upvotes); }
+                else { setVoteState('down'); setVotes(fullStory.upvotes - 1); }
+              }}
+              className="flex items-center gap-1 rounded-r-full px-4 py-2 transition-colors hover:bg-muted-foreground/20"
+            >
+              <ArrowBigDown size={24} className={voteState === 'down' ? 'fill-reddit-downvote text-reddit-downvote' : 'text-muted-foreground'} />
+            </button>
+          </div>
+        </div>
+
+        {/* Inline Premium Ad */}
+        <div className="my-8 overflow-hidden rounded-2xl border border-border/60 bg-[#FDFBF7] shadow-sm dark:bg-[#1A1A1E]">
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-border/30 px-4 py-2.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">Sponsored</span>
+            <span className="text-[10px] font-medium text-muted-foreground/80">Skillshare · Promoted</span>
+          </div>
+          
+          {/* Image Placeholder */}
+          <div className="aspect-[21/9] w-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500" />
+          
+          {/* Content */}
+          <div className="p-4 sm:p-5">
+            <h3 className="mb-1.5 text-lg font-bold text-slate-900 dark:text-slate-100">
+              Unlock your creativity with thousands of classes
+            </h3>
+            <p className="mb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+              Join millions of creatives learning design, illustration, photography, and more.
+            </p>
+            
+            <button className="w-full rounded-xl bg-primary py-3 text-sm font-bold text-primary-foreground transition-transform hover:scale-[1.02] active:scale-[0.98]">
+              Learn More
+            </button>
+          </div>
+        </div>
+
+        {/* Next Part Button */}
+        {fullStory.nextPartId && (
+          <div className="mt-8 flex justify-center">
+            <button 
+              onClick={() => {
+                const nextPost = samplePosts.find(p => p.id === fullStory.nextPartId);
+                if (nextPost) {
+                  updateStoryProgress(currentStoryId!, progressRef.current);
+                  addSavedStory({
+                    id: nextPost.id,
+                    title: nextPost.title,
+                    subreddit: nextPost.subreddit,
+                    author: nextPost.author,
+                    timeAgo: nextPost.timeAgo,
+                    estimatedReadTime: '15 min read',
+                  });
+                  setCurrentStoryId(nextPost.id);
+                }
+              }}
+              className="w-full max-w-sm rounded-full bg-primary px-6 py-4 text-center font-bold text-primary-foreground shadow-lg transition-transform hover:scale-105 active:scale-95"
+            >
+              Continue to Part {(fullStory.partNumber || 1) + 1}
+            </button>
+          </div>
+        )}
 
         {/* Bottom spacing */}
         <div className="h-32" />
@@ -244,7 +283,7 @@ export function ReaderView() {
       <AuthorAnalyticsSheet
         isOpen={isAnalyticsOpen}
         onClose={() => setIsAnalyticsOpen(false)}
-        authorUsername={story.author}
+        authorUsername={fullStory.author}
       />
     </div>
   );
