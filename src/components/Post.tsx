@@ -14,7 +14,10 @@ export function Post({ post }: PostProps) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isWhyOpen, setIsWhyOpen] = useState(false);
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
-  const [isSaved, setIsSaved] = useState(post.isSaved || false);
+  
+  const { savedStories, toggleCollection } = useApp();
+  const isSaved = savedStories.some(s => s.id === post.id && s.collections?.includes('Read Later'));
+  
   const [votes, setVotes] = useState(post.upvotes);
   const [voteState, setVoteState] = useState<'up' | 'down' | null>(null);
   const { addSavedStory } = useApp();
@@ -30,17 +33,14 @@ export function Post({ post }: PostProps) {
   };
 
   const handleSave = (collection: string) => {
-    setIsSaved(true);
-    if (collection === 'Read Later') {
-      addSavedStory({
-        id: post.id,
-        title: post.title,
-        subreddit: post.subreddit,
-        author: post.author,
-        timeAgo: post.timeAgo,
-        estimatedReadTime: '15 min read',
-      });
-    }
+    toggleCollection(post.id, collection, {
+      id: post.id,
+      title: post.title,
+      subreddit: post.subreddit,
+      author: post.author,
+      timeAgo: post.timeAgo,
+      estimatedReadTime: '15 min read',
+    });
   };
 
   return (

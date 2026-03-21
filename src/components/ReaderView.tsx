@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Share2, Bookmark, Settings, Clock, ArrowBigUp, ArrowBigDown, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Share2, Bookmark, Settings, Clock, ArrowBigUp, ArrowBigDown } from 'lucide-react';
 import { useReadingProgress } from '@/hooks/useReadingProgress';
 import { useApp } from '@/context/AppContext';
 import { AuthorAnalyticsSheet } from './AuthorAnalyticsSheet';
+import { SaveBottomSheet } from './SaveBottomSheet';
 import { SessionSummary } from './SessionSummary';
 import { samplePosts } from '@/data/samplePosts';
 
 export function ReaderView() {
   const progress = useReadingProgress();
-  const { savedStories, updateStoryProgress, setCurrentStoryId, currentStoryId, setActiveTab, addSavedStory } = useApp();
+  const { savedStories, updateStoryProgress, setCurrentStoryId, currentStoryId, setActiveTab, addSavedStory, toggleCollection } = useApp();
   const progressRef = useRef(progress);
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+  const [isSaveSheetOpen, setIsSaveSheetOpen] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [sessionSeconds, setSessionSeconds] = useState(0);
   const [votes, setVotes] = useState(0);
@@ -28,7 +30,17 @@ export function ReaderView() {
   useEffect(() => {
     if (fullStory) {
       setVotes(fullStory.upvotes);
-      window.scrollTo(0, 0);
+      
+      const initProgress = savedStories.find((s) => s.id === currentStoryId)?.readProgress || 0;
+      if (initProgress > 0 && initProgress < 100) {
+        setTimeout(() => {
+          const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const target = (initProgress / 100) * scrollHeight;
+          window.scrollTo({ top: target, behavior: 'instant' });
+        }, 50);
+      } else {
+        window.scrollTo(0, 0);
+      }
     }
   }, [currentStoryId, fullStory?.upvotes]);
 
@@ -96,6 +108,19 @@ export function ReaderView() {
 
   if (!savedStory || !fullStory) return null;
 
+  const isSavedForLater = savedStories.some(s => s.id === currentStoryId && s.collections?.includes('Read Later'));
+
+  const handleSaveCollection = (collection: string) => {
+    toggleCollection(fullStory.id, collection, {
+      id: fullStory.id,
+      title: fullStory.title,
+      subreddit: fullStory.subreddit,
+      author: fullStory.author,
+      timeAgo: fullStory.timeAgo,
+      estimatedReadTime: '15 min read', // fallback
+    });
+  };
+
   if (showSummary) {
     return (
       <SessionSummary
@@ -143,10 +168,10 @@ export function ReaderView() {
               <Settings size={20} className="text-muted-foreground" />
             </button>
             <button className="rounded-full p-2 transition-colors hover:bg-muted">
-              <Share2 size={20} className="text-muted-foreground" />
+              <Share2 size={22} className="text-foreground" />
             </button>
-            <button className="rounded-full p-2 transition-colors hover:bg-muted">
-              <Bookmark size={20} className="fill-primary text-primary" />
+            <button onClick={() => setIsSaveSheetOpen(true)} className="rounded-full p-2 transition-colors hover:bg-muted">
+              <Bookmark size={22} className={isSavedForLater ? 'fill-primary text-primary' : 'text-foreground'} />
             </button>
           </div>
         </div>
@@ -284,6 +309,12 @@ export function ReaderView() {
         isOpen={isAnalyticsOpen}
         onClose={() => setIsAnalyticsOpen(false)}
         authorUsername={fullStory.author}
+      />
+
+      <SaveBottomSheet
+        isOpen={isSaveSheetOpen}
+        onClose={() => setIsSaveSheetOpen(false)}
+        onSave={handleSaveCollection}
       />
     </div>
   );
