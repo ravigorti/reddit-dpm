@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Share2, Bookmark, Settings, Clock, ArrowBigUp, ArrowBigDown } from 'lucide-react';
 import { useReadingProgress } from '@/hooks/useReadingProgress';
 import { useApp } from '@/context/AppContext';
-import { AuthorAnalyticsSheet } from './AuthorAnalyticsSheet';
+import { AuthorProfileSheet } from './AuthorProfileSheet';
 import { SaveBottomSheet } from './SaveBottomSheet';
 import { SessionSummary } from './SessionSummary';
 import { samplePosts } from '@/data/samplePosts';
@@ -12,7 +12,7 @@ export function ReaderView() {
   const progress = useReadingProgress();
   const { savedStories, updateStoryProgress, setCurrentStoryId, currentStoryId, setActiveTab, addSavedStory, toggleCollection } = useApp();
   const progressRef = useRef(progress);
-  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSaveSheetOpen, setIsSaveSheetOpen] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [sessionSeconds, setSessionSeconds] = useState(0);
@@ -192,7 +192,7 @@ export function ReaderView() {
             <div>
               <div className="flex items-center gap-2">
                 <button 
-                  onClick={() => setIsAnalyticsOpen(true)}
+                  onClick={() => setIsProfileOpen(true)}
                   className="font-medium text-left hover:underline"
                 >
                   {fullStory.author}
@@ -305,9 +305,9 @@ export function ReaderView() {
         <div className="h-32" />
       </article>
 
-      <AuthorAnalyticsSheet
-        isOpen={isAnalyticsOpen}
-        onClose={() => setIsAnalyticsOpen(false)}
+      <AuthorProfileSheet
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
         authorUsername={fullStory.author}
       />
 
