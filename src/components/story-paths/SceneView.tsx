@@ -70,7 +70,7 @@ export function SceneView({
 
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-[#FDF6EC]">
+    <div className="fixed inset-y-0 inset-x-0 z-50 mx-auto flex w-full max-w-md flex-col bg-[#FDF6EC] sm:shadow-2xl sm:border-x border-[#E8DFD0]">
       {/* Top progress bar */}
       <div className="h-1 w-full bg-[#E8DFD0]">
         <motion.div
@@ -94,11 +94,10 @@ export function SceneView({
           {narrationState.speechAvailable && (
             <button
               onClick={onToggleNarration}
-              className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-[#1A1A2E]/10 ${
-                narrationState.narrationEnabled
-                  ? 'text-[#FF4500]'
-                  : 'text-[#1A1A2E]/40'
-              }`}
+              className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-[#1A1A2E]/10 ${narrationState.narrationEnabled
+                ? 'text-[#FF4500]'
+                : 'text-[#1A1A2E]/40'
+                }`}
               title={narrationState.narrationEnabled ? 'Narration ON' : 'Narration OFF'}
             >
               {narrationState.narrationEnabled ? <Mic size={18} /> : <MicOff size={18} />}
@@ -121,18 +120,26 @@ export function SceneView({
       </div>
 
       {/* Scene illustration — animated */}
-      <div className="relative flex-1 overflow-hidden" style={{ maxHeight: '45%' }}>
+      <div className="relative flex-1 overflow-hidden" style={{ minHeight: '30%', maxHeight: '55%' }}>
         <motion.div
           key={scene.id}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="absolute inset-0"
+          className="absolute inset-0 bg-[#1A1A2E]/5"
         >
+          {/* subtle background behind the contain image */}
           <div
-            className="h-full w-full"
-            style={{ background: story.cardGradient, opacity: 0.15 }}
+            className="absolute inset-0 h-full w-full opacity-15"
+            style={{ background: story.cardGradient }}
           />
+          {scene.image && (
+            <img
+              src={scene.image}
+              alt={scene.title}
+              className="absolute inset-0 h-full w-full object-contain p-2 pb-6 scale-[1.3]"
+            />
+          )}
         </motion.div>
       </div>
 
@@ -167,11 +174,10 @@ export function SceneView({
           {scene.paragraphs.map((para, i) => (
             <p
               key={i}
-              className={`text-[15px] leading-[1.7] transition-opacity duration-300 ${
-                para.style === 'faded'
-                  ? 'text-[#1A1A2E]/50'
-                  : 'text-[#1A1A2E]/85'
-              }`}
+              className={`text-[15px] leading-[1.7] transition-opacity duration-300 ${para.style === 'faded'
+                ? 'text-[#1A1A2E]/50'
+                : 'text-[#1A1A2E]/85'
+                }`}
             >
               {applyBoldTerms(para.text, scene.boldTerms)}
             </p>
@@ -179,8 +185,8 @@ export function SceneView({
         </div>
       </motion.div>
 
-      {/* Bottom CONTINUE button — fixed */}
-      <div className="fixed inset-x-0 bottom-0 bg-gradient-to-t from-[#FDF6EC] via-[#FDF6EC] to-transparent px-5 pb-6 pt-4">
+      {/* Bottom CONTINUE button — absolute to container */}
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#FDF6EC] via-[#FDF6EC] to-transparent px-5 pb-6 pt-4">
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}

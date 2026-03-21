@@ -39,9 +39,13 @@ export function StoryLandingPage({
           className="relative h-[55%] min-h-[280px] flex-shrink-0 sm:h-[320px]"
           style={{ background: story.cardGradient }}
         >
-          <div className="absolute inset-0 flex items-center justify-center opacity-30">
-            <span className="text-8xl">🏛️</span>
-          </div>
+          {story.heroImage ? (
+            <img src={story.heroImage} alt={story.title} className="absolute inset-0 h-full w-full object-cover opacity-90 mix-blend-overlay" />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center opacity-30">
+              <span className="text-8xl">🏛️</span>
+            </div>
+          )}
           {/* Text overlay at bottom of hero */}
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#FDF6EC] to-transparent pb-0 pt-16" />
         </div>
@@ -81,8 +85,8 @@ export function StoryLandingPage({
             {isInProgress
               ? `RESUME — Chapter ${progress.currentChapterIndex + 1}`
               : progress.completed
-              ? 'REPLAY STORY'
-              : 'START STORY'}
+                ? 'REPLAY STORY'
+                : 'START STORY'}
           </motion.button>
         </div>
       </motion.div>

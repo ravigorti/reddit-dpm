@@ -71,7 +71,7 @@ export function QuizView({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-[#FDF6EC]">
+    <div className="fixed inset-y-0 inset-x-0 z-50 mx-auto flex w-full max-w-md flex-col bg-[#FDF6EC] sm:shadow-2xl sm:border-x border-[#E8DFD0]">
       {/* Hearts */}
       <div className="flex items-center justify-end gap-1 px-4 py-3">
         {Array.from({ length: 3 }).map((_, i) => (
@@ -166,11 +166,10 @@ export function QuizView({
               className="mt-6 w-full max-w-sm sm:max-w-lg"
             >
               <div
-                className={`rounded-xl p-4 ${
-                  isCorrect
+                className={`rounded-xl p-4 ${isCorrect
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800'
-                }`}
+                  }`}
               >
                 <p className="text-lg font-bold">
                   {isCorrect ? '🎉 CORRECT!' : '❌ NOT QUITE!'}
@@ -183,17 +182,16 @@ export function QuizView({
       </div>
 
       {/* Bottom button */}
-      <div className="fixed inset-x-0 bottom-0 bg-gradient-to-t from-[#FDF6EC] via-[#FDF6EC] to-transparent px-5 pb-6 pt-4">
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#FDF6EC] via-[#FDF6EC] to-transparent px-5 pb-6 pt-4">
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={confirmed ? onContinue : handleConfirm}
           disabled={selectedIndex === null && !confirmed}
-          className={`w-full rounded-2xl py-4 text-base font-bold text-white shadow-lg transition-colors ${
-            selectedIndex === null && !confirmed
+          className={`w-full rounded-2xl py-4 text-base font-bold text-white shadow-lg transition-colors ${selectedIndex === null && !confirmed
               ? 'cursor-not-allowed bg-gray-300 shadow-none'
               : 'bg-[#FF4500] shadow-[#FF4500]/25 hover:bg-[#E63E00]'
-          }`}
+            }`}
         >
           {confirmed ? 'CONTINUE' : 'PICK AN ANSWER'}
         </motion.button>

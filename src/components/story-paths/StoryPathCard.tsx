@@ -19,9 +19,9 @@ export function StoryPathCard({ story, progress, onClick }: StoryPathCardProps) 
   const totalScenes = story.chapters.reduce((acc, ch) => acc + ch.scenes.length, 0);
   const completedScenes = progress
     ? story.chapters
-        .slice(0, progress.currentChapterIndex)
-        .reduce((acc, ch) => acc + ch.scenes.length, 0) +
-      (progress.currentSceneIndex || 0)
+      .slice(0, progress.currentChapterIndex)
+      .reduce((acc, ch) => acc + ch.scenes.length, 0) +
+    (progress.currentSceneIndex || 0)
     : 0;
   const progressPercent = totalScenes > 0 ? (completedScenes / totalScenes) * 100 : 0;
 
@@ -36,10 +36,14 @@ export function StoryPathCard({ story, progress, onClick }: StoryPathCardProps) 
         className="relative h-[200px] w-[280px] overflow-hidden rounded-2xl md:w-[320px]"
         style={{ background: story.cardGradient }}
       >
-        {/* Placeholder image area */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-20">
-          <span className="text-6xl">🏛️</span>
-        </div>
+        {/* Image / Placeholder area */}
+        {story.heroImage ? (
+          <img src={story.heroImage} alt={story.title} className="absolute inset-0 h-full w-full object-cover opacity-90 mix-blend-overlay" />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center opacity-20">
+            <span className="text-6xl">🏛️</span>
+          </div>
+        )}
 
         {/* Gradient overlay at bottom */}
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 pt-12">

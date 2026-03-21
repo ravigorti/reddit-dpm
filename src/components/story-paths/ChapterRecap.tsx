@@ -17,7 +17,7 @@ export function ChapterRecap({
   onNext,
 }: ChapterRecapProps) {
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-[#FDF6EC]">
+    <div className="fixed inset-y-0 inset-x-0 z-50 mx-auto flex w-full max-w-md flex-col bg-[#FDF6EC] sm:shadow-2xl sm:border-x border-[#E8DFD0]">
       <div className="flex flex-1 flex-col items-center overflow-y-auto px-5 pb-28 pt-10">
         {/* Header */}
         <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#FF4500]">
@@ -52,9 +52,13 @@ export function ChapterRecap({
                 {/* Thumbnail + text */}
                 <div className="flex items-start gap-3">
                   <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gradient-to-br from-[#2D1B69]/30 to-[#E67E22]/30">
-                    <div className="flex h-full w-full items-center justify-center text-2xl opacity-50">
-                      📜
-                    </div>
+                    {item.image ? (
+                      <img src={item.image} alt="recap" className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-2xl opacity-50">
+                        📜
+                      </div>
+                    )}
                   </div>
                   <p className="pt-1 text-sm leading-relaxed text-[#1A1A2E]/75">
                     {item.summary}
@@ -67,7 +71,7 @@ export function ChapterRecap({
       </div>
 
       {/* Bottom button */}
-      <div className="fixed inset-x-0 bottom-0 bg-gradient-to-t from-[#FDF6EC] via-[#FDF6EC] to-transparent px-5 pb-6 pt-4">
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#FDF6EC] via-[#FDF6EC] to-transparent px-5 pb-6 pt-4">
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
