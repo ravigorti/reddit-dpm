@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowUpCircle, Eye, Bookmark, TrendingUp } from 'lucide-react';
+import { X, ArrowUpCircle, Eye, Bookmark, TrendingUp, Clock } from 'lucide-react';
 import { leaderboardAuthors, AuthorStats } from '@/data/authors';
 
 interface AuthorAnalyticsSheetProps {
@@ -21,7 +21,9 @@ const defaultData = {
     { label: 'Read 25%', percent: 75, color: 'bg-green-500' },
     { label: 'Read 50%', percent: 55, color: 'bg-amber-500' },
     { label: 'Finished', percent: 50, color: 'bg-green-500' },
-  ]
+  ],
+  timeEarned: '150',
+  avgTime: 12
 };
 
 export function AuthorAnalyticsSheet({ isOpen, onClose, authorUsername }: AuthorAnalyticsSheetProps) {
@@ -40,7 +42,9 @@ export function AuthorAnalyticsSheet({ isOpen, onClose, authorUsername }: Author
       { label: 'Read 25%', percent: Math.min(100, authorMatch.completionRate + 15), color: 'bg-green-500' },
       { label: 'Read 50%', percent: Math.min(100, authorMatch.completionRate + 8), color: 'bg-amber-500' },
       { label: 'Finished', percent: authorMatch.completionRate, color: 'bg-green-500' },
-    ]
+    ],
+    timeEarned: authorMatch.timeEarned?.toLocaleString() || '150',
+    avgTime: authorMatch.avgTimePerReader || 12
   } : defaultData;
 
   const circumference = 2 * Math.PI * 24;
@@ -91,35 +95,51 @@ export function AuthorAnalyticsSheet({ isOpen, onClose, authorUsername }: Author
                 </div>
               </div>
 
-              {/* Engagement Stats row */}
-              <div className="flex items-center justify-between rounded-xl bg-slate-50 p-4 mb-4">
+              {/* Engagement Stats col */}
+              <div className="flex flex-col gap-4 rounded-xl bg-slate-50 p-4 mb-4">
                 <div className="flex flex-col">
                   <div className="flex items-center gap-3 text-sm font-semibold text-slate-700 mb-1">
                     <span className="flex items-center gap-1"><ArrowUpCircle size={16} className="text-orange-500" /> {data.upvotes} upvotes</span>
                     <span className="text-slate-300">•</span>
                     <span className="flex items-center gap-1 text-[#00B894]"><Eye size={16} /> {data.readers} readers</span>
                   </div>
-                  <span className="text-xs text-slate-500">people who finished your stories</span>
+                  <span className="text-xs text-slate-500">people who opened your stories</span>
                 </div>
                 
-                {/* Completion rate ring */}
-                <div className="flex flex-col items-center">
-                  <div className="relative h-14 w-14">
-                    <svg className="h-14 w-14 -rotate-90 transform">
-                      <circle cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-slate-200" />
-                      <circle
-                        cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="4" fill="transparent"
-                        strokeDasharray={circumference}
-                        strokeDashoffset={strokeDashoffset}
-                        className="text-[#00B894] transition-all duration-1000 ease-out"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-slate-700">
-                      {data.completionRate}%
-                    </div>
+                {/* Time Earned */}
+                <div className="flex flex-col items-center rounded-xl bg-slate-900 p-4 text-center shadow-inner">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Clock size={16} className="text-[#00B894]" />
+                    <span className="text-sm font-bold text-white">{data.timeEarned} hours earned</span>
                   </div>
-                  <span className="mt-1 text-[10px] font-medium text-slate-500">finish rate</span>
+                  <span className="text-sm text-slate-400 mb-1">Total time readers spent on your stories</span>
+                  <span className="text-xs text-slate-500">Avg {data.avgTime} min per reader</span>
+                </div>
+
+                {/* Completion rate ring */}
+                <div className="flex items-center justify-between border-t border-slate-200 pt-3">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold text-slate-700">Completion Rate</span>
+                    <span className="text-xs text-slate-500">people who finished your stories</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <div className="relative h-14 w-14">
+                      <svg className="h-14 w-14 -rotate-90 transform">
+                        <circle cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-slate-200" />
+                        <circle
+                          cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="4" fill="transparent"
+                          strokeDasharray={circumference}
+                          strokeDashoffset={strokeDashoffset}
+                          className="text-[#00B894] transition-all duration-1000 ease-out"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-slate-700">
+                        {data.completionRate}%
+                      </div>
+                    </div>
+                    <span className="mt-1 text-[10px] font-medium text-slate-500">finish rate</span>
+                  </div>
                 </div>
               </div>
 

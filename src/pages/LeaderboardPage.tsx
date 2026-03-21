@@ -132,7 +132,7 @@ export default function LeaderboardPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs">
+                <div className="flex flex-wrap items-center gap-1.5 text-[11px] sm:text-xs">
                   <div className="flex items-center gap-1 font-semibold text-[#00B894]">
                     <span className="text-[14px]">👁</span> {formatReaders(author.readers)} <span className="text-slate-400 font-normal">readers</span>
                   </div>
@@ -143,6 +143,10 @@ export default function LeaderboardPage() {
                   <div className="text-slate-600">•</div>
                   <div className="flex items-center gap-1 text-slate-300">
                     <span className="text-[12px]">📚</span> {author.storiesFeatured}
+                  </div>
+                  <div className="text-slate-600">•</div>
+                  <div className="flex items-center gap-1 text-slate-300">
+                    <span className="text-[12px]">⏱</span> {author.timeEarned}h
                   </div>
                 </div>
               </div>
@@ -162,6 +166,8 @@ export default function LeaderboardPage() {
               <span className="text-slate-300">72% <span className="text-slate-500">done</span></span>
               <span className="text-slate-600">•</span>
               <span className="text-slate-300">1 <span className="text-slate-500">story</span></span>
+              <span className="text-slate-600">•</span>
+              <span className="text-slate-300">⏱ 45h</span>
             </div>
           </div>
           <button 
@@ -182,6 +188,8 @@ export default function LeaderboardPage() {
               <span className="font-semibold text-[#00B894]">2.1K <span className="text-slate-400 font-normal">readers</span></span>
               <span className="text-slate-600">•</span>
               <span className="text-slate-300">72% <span className="text-slate-500">done</span></span>
+              <span className="text-slate-600">•</span>
+              <span className="text-slate-300">⏱ 45h</span>
             </div>
           </div>
           <button 
